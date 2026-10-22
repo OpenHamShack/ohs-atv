@@ -1,0 +1,9 @@
+# The shared OpenHamShack libraries this app pins (REPO-LAYOUT 4): built by
+# ~/ohs-libs tools/build.sh at ohs-libs 326d251 (dataset 2026.10.3) and written
+# here by tools/vendor.sh. store/Containerfile installs the first three into the
+# image with their hashes checked; shack-i18n is the string check's wheel
+# (tools/i18n.py).
+shack-bandplan==0.1.0 --hash=sha256:ef4e1a33c8cae151876baccb361c6a81b1c0def72f733613379fe994f5be3c46
+shack-client==0.1.0 --hash=sha256:54388bb4203df732aac4d97c664aae26c61c24da5230488afe81aa9af38c2856
+shack-pad==0.1.0 --hash=sha256:8fbb9e4c21f391d2fae98713250b5bbe482a90506f312e9f1090d30860e7e944
+shack-i18n==0.1.0 --hash=sha256:1a82b97235dd8d0862eee8c90ef540d0f7a40ad561bb59ce2c3264ef9583c12e

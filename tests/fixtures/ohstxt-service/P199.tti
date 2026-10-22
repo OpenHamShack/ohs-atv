@@ -1,0 +1,28 @@
+DE,Engineering test page
+PN,19900
+SC,0000
+PS,8000
+CT,8,T
+OL,0,        OHS-ATV %%# %%a %e %%b C%H:%M/%S
+OL,1,CMENGINEERING TEST PAGEG199             
+OL,3,WSVRUQTP    
+OL,4,WSVRUQTP    
+OL,5,whiteAredBgreenCyellowDblueEmagentaFcyan
+OL,6,GContiguousRj5,#sGSeparatedZRj5,#s  
+OL,7,GFlashHCFLASHINGIGsteadyBRevealXSECRET  
+OL,8,GBg:D]Cyellow on blue\Gblack again      
+OL,9,GDouble:MFHEIGHTLGnormal, same row      
+OL,10,(this row's own text is hidden)         
+OL,11,GNo hold:QSRVGgaps between          
+OL,12,GHold:   Q^SRV_Gno gaps             
+OL,13,GBox:KKin a boxJJoutside the box        
+OL,14,GBlast-through:U,ABC,Gcaps in gfx       
+OL,16,FG0:G !"#$%&'()*+,-./0123456789:;<=>?   
+OL,17,F   G@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_   
+OL,18,F   G`abcdefghijklmnopqrstuvwxyz{|}~   
+OL,20,FConW !"#$%&'()*+,-./0123456789:;<=>?   
+OL,21,FConW`abcdefghijklmnopqrstuvwxyz{|}~   
+OL,22,FSepZW !"#$%&'()*+,-./0123456789:;<=>?  
+OL,23,FSepZW`abcdefghijklmnopqrstuvwxyz{|}~  
+OL,24,AIndex    BNews     CFlash    FIndex    
+FL,100,101,150,100,8FF,100

@@ -1,0 +1,24 @@
+#!/bin/sh
+# Launcher for OpenHamShack ATV (copied from OpenHamShack NB's).
+#
+# POSIX sh, because /bin/sh on Debian is dash. The ohsatv package lives under
+# /usr/lib/openhamshack-atv/ rather than in site-packages (a private application,
+# never on the distribution's module path), so PYTHONPATH is set here. The
+# install root is computed from this script's own location, so the same
+# launcher works at /usr/bin and extracted anywhere else (the packaging test
+# runs it from a `dpkg-deb -x` tree).
+set -e
+
+self=$(readlink -f "$0" 2>/dev/null) || self="$0"
+bindir=$(dirname "$self")
+root=$(dirname "$bindir")
+libdir="$root/lib/openhamshack-atv"
+
+if [ -n "$PYTHONPATH" ]; then
+    PYTHONPATH="$libdir:$PYTHONPATH"
+else
+    PYTHONPATH="$libdir"
+fi
+export PYTHONPATH
+
+exec python3 -m ohsatv "$@"

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.claude/
+*.deb
+# The pseudo-locale is generated on demand (tools/i18n.py pseudo), never shipped.
+*_en_XA.ts
+*_en_XA.qm

@@ -1,0 +1,52 @@
+DE,Weather carousel
+PN,30001
+SC,0001
+PS,8000
+CT,10,T
+OL,0,        OHS-ATV %%# %%a %e %%b C%H:%M/%S
+OL,1,T]GMWEATHER  CNORTH                     
+OL,3,T]                                      
+OL,5,FToday: GCloudy, rain later             
+OL,7,  S $zu( G  Temperature C9C             
+OL,8,  S1j5bG  wind W 20mph                
+OL,9,  S $k7(                                
+OL,12,GOutlook: settled, mild, light winds.   
+OL,14,FPropagation: tropo lift likely on 23cm 
+OL,15,Falong the east coast after dark.       
+OL,22,GRegion C1/3G - turns by itself         
+OL,24,AIndex    BToday    COutlook  FIndex    
+FL,100,300,302,100,8FF,100
+PN,30002
+SC,0002
+PS,8000
+CT,10,T
+OL,0,        OHS-ATV %%# %%a %e %%b C%H:%M/%S
+OL,1,T]GMWEATHER  CMIDLANDS                  
+OL,3,T]                                      
+OL,5,CToday: GSunny spells                   
+OL,7,  S $zu( G  Temperature C13C            
+OL,8,  S1j5bG  wind SW 10mph               
+OL,9,  S $k7(                                
+OL,12,GOutlook: settled, mild, light winds.   
+OL,14,FPropagation: tropo lift likely on 23cm 
+OL,15,Falong the east coast after dark.       
+OL,22,GRegion C2/3G - turns by itself         
+OL,24,AIndex    BToday    COutlook  FIndex    
+FL,100,300,302,100,8FF,100
+PN,30003
+SC,0003
+PS,8000
+CT,15,T
+OL,0,        OHS-ATV %%# %%a %e %%b C%H:%M/%S
+OL,1,T]GMWEATHER  CSOUTH                     
+OL,3,T]                                      
+OL,5,BToday: GDry and bright                 
+OL,7,  S $zu( G  Temperature C15C            
+OL,8,  S1j5bG  wind S 5mph                 
+OL,9,  S $k7(                                
+OL,12,GOutlook: settled, mild, light winds.   
+OL,14,FPropagation: tropo lift likely on 23cm 
+OL,15,Falong the east coast after dark.       
+OL,22,GRegion C3/3G - turns by itself         
+OL,24,AIndex    BToday    COutlook  FIndex    
+FL,100,300,302,100,8FF,100

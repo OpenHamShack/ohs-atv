@@ -1,0 +1,60 @@
+.TH OPENHAMSHACK-ATV 1 "2026-10-04" "openhamshack-atv" "User Commands"
+.SH NAME
+openhamshack-atv \- analogue amateur-television transceiver
+.SH SYNOPSIS
+.B openhamshack-atv
+.RI [ OPTIONS ]
+.SH DESCRIPTION
+OpenHamShack ATV is a native PyQt6 desktop transceiver for analogue amateur
+television: 625-line PAL with sound, as AM-VSB (System I style) or FM-ATV
+(IARU R1 V.2 with CCIR 405 pre-emphasis and a 6 MHz sound subcarrier), on
+23cm and 6cm, and analogue receive on 70cm. The picture is generated and
+decoded in the program; a Pluto-family SDR (ADALM-Pluto, Pluto+, Pluto
+nano, LibreSDR) is driven through libiio for both directions.
+.PP
+With no radio configured it runs against a simulated radio: simulated
+stations on the bandplan channels, and its own transmission looped back,
+so the whole chain can be explored and tested without hardware. The
+simulator transmits nothing.
+.PP
+A Pluto on USB 2 sustains about 6.8 million samples a second; colour
+AM-VSB with sound needs 10 and standard FM-ATV 20, which need a Pluto+ or
+LibreSDR on Ethernet. The window states what fits at the chosen rate.
+.SH OPTIONS
+.TP
+.B \-\-headless
+Run the engine without a window and print one status line a second.
+Nothing in this mode can transmit.
+.TP
+.BR \-\-device " " sim | pluto
+Use this device for this run only (not saved).
+.TP
+.BR \-\-band " " 70cm | 23cm | 6cm
+Start on this band for this run only.
+.TP
+.BR \-\-system " " am | fm
+Start with this system for this run only.
+.TP
+.BI \-\-seconds " N"
+With \-\-headless, stop after N seconds.
+.TP
+.B \-\-no\-audio
+Run without a sound card.
+.SH SAFETY
+The program never transmits at start-up or after a settings change. A real
+radio does not transmit until "Allow transmit on real hardware" is set in
+Settings, the licence conditions are acknowledged and a callsign is set; the
+callsign is drawn into every transmitted picture. Transmit is refused
+outside the UK allocations and ATV bandplan segments (analogue ATV is not in
+the 70cm bandplan), outside the radio's tuning range, and when the signal
+does not fit the sample rate.
+.SH FILES
+.TP
+.I ~/.config/openhamshack-atv/config.json
+Settings (or $OHSATV_CONF).
+.TP
+.I ~/.local/share/openhamshack-atv/
+Snapshots (or $OHSATV_DATA).
+.SH SEE ALSO
+.BR ffmpeg (1),
+.BR iio_info (1)

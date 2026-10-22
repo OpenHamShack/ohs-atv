@@ -1,0 +1,127 @@
+apiVersion: dock360/v1
+
+# The store form of OpenHamShack ATV (BETA-PLAN arch change 3, D8,
+# REPO-LAYOUT 4.1; decision 1: store packaging lives in the app repo's
+# store/): the same engine as the desktop app, run headless behind its
+# HTTP/WebSocket API (`python3 -m ohsatv --server`, docs/SERVER-API.md) in a
+# rootless container on an OpenHamShack controller. OpenHamShack Remote is
+# its user interface; the base path shows a status page. Packaged by
+# tools/build-store.sh, which stages ohsatv/ and the pinned shared libraries
+# beside this file and signs the package with the image in it.
+id: shack-atv
+name: ATV
+version: 0.2.5-beta.1
+summary: Analogue amateur television - AM-VSB and FM-ATV PAL, teletext and NICAM, with a Pluto or a HackRF.
+description: >
+  OpenHamShack ATV on the controller: receive and transmit analogue amateur
+  television on 70cm, 23cm and 6cm - AM-VSB and FM-ATV PAL, 405 lines, the
+  narrow formats, teletext and subtitles, NICAM-728 stereo - with the
+  waveform monitor, vectorscope and spectrum. Operate it from OpenHamShack
+  Remote.
+
+  The controller signs people in and lends the Pluto and HackRF through its
+  hardware broker. Transmitting needs the Transmit level, a callsign and a
+  licence in the station profile, "Allow transmit on real hardware" in the
+  app's settings, the transmit lease, and the broker's yes; losing any of
+  them takes it off the air. A fresh install receives the simulator until a
+  radio is chosen.
+category: radio
+icon: 📺
+author: OpenHamShack
+license: GPL-3.0-or-later
+homepage: https://openhamshack.com/
+
+openhamshack:
+  kind: atv
+  tx_capable: true
+  anonymous_view: false
+  default_write_level: control
+  # The proxy's minimums (CONTROLLER-CONTRACT 5.2), first match wins; the
+  # app checks again (ohsatv/server/app.py ROUTES) and holds the rules a glob
+  # cannot say: which settings change what goes on the air, and keying
+  # through POST /api/ptt, which is Control to unkey and Transmit to key.
+  levels:
+    - {path: "/api/ptt/heartbeat", level: transmit}
+    - {path: "/api/ptt", method: POST, level: control}
+    - {path: "/api/audio/tx", level: transmit}
+    - {path: "/api/caption", method: POST, level: transmit}
+    - {path: "/api/accept-radio", method: POST, level: transmit}
+    - {path: "/api/halt", method: POST, level: control}
+  release_request: /api/shack/release
+  busy: /api/shack/busy
+  broker_devices: [pluto, hackrf]
+
+# Lent by the broker while the app uses them (claim: runtime); the names are
+# the rendezvous names every OpenHamShack app that uses one declares.
+exclusive_devices:
+  - name: pluto-1
+    label: Pluto
+    address: 192.168.2.1
+    claim: runtime
+  - name: hackrf-1
+    label: HackRF One
+    usb_id: "1d50:6089"
+    claim: runtime
+
+runtime:
+  build:
+    context: .
+    containerfile: Containerfile
+  user: "1000:1000"
+  read_only_rootfs: true
+  no_new_privileges: true
+  cap_drop:
+    - ALL
+  # The HackRF is a libusb device whose /dev/bus/usb node changes on every
+  # replug, so the bus is bound whole; which radio the app may open is the
+  # broker's claim (as the QO-100 WB app does for its tuners).
+  usb_bus: true
+  # The radio lock's own folder (OHSRADIO_LOCK_DIR) and the unpacked
+  # libraries' cache live here, never in the read-only image.
+  tmpfs:
+    - /tmp
+  stop_timeout: 15
+
+web:
+  enabled: true
+  container_port: 8080
+  subdomain: atv
+  strip_prefix: true
+  websockets: true
+
+health:
+  type: http
+  # 401 proxy_required is healthy: the server is up and refusing a request
+  # the platform's proxy did not vouch for.
+  path: /api/status
+  expect_status: [200, 401]
+  interval: 30
+  timeout: 5
+  retries: 3
+  start_period: 20
+
+resources:
+  # Decoding PAL is the expensive part: standard FM-ATV at 20 MS/s took
+  # about four cores of the development VM in the simulator; AM-VSB at
+  # 10 MS/s about half that (docs/PERF.md has the per-stage costs).
+  memory_max: 2G
+  memory_high: 1536M
+  cpu_quota: 400%
+  # runtime.user means UserNS=keep-id, and podman's ID-mapped layer copy on
+  # first start is bounded by this and sized by the host's core count.
+  pids_max: 512
+
+volumes:
+  - name: data
+    container_path: /data
+    description: >
+      Settings, the transmit log, IQ recordings and teletext captures, and
+      the teletext pages and subtitle files to send.
+    backup: true
+
+backup:
+  strategy: hot
+
+# The engine release that carries the OpenHamShack edition's broker and
+# carried images (feature/ohs-edition, platform 2.0.0-beta.1).
+min_dock360: "0.12.25"

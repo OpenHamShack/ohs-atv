@@ -1,0 +1,97 @@
+# The Corresponding Source for the third-party GPL, LGPL and MPL code that
+# OpenHamShack ATV's Windows installer (openhamshack-atv-<v>-setup.exe) carries, one
+# tarball per line. It is published on the shared source site,
+# https://source.brian-henderson.co.uk/#openhamshack-atv (/srv/source-site on
+# shack; the format and procedure are docs/source-site.md in ~/openhamshack-nb),
+# as the manifest openhamshack-atv:
+#
+#     python3 ~/openhamshack-nb/tools/source-site.py publish openhamshack-atv \
+#         packaging/windows/sources.txt
+#
+# which fetches every file the site does not hold yet, checks every hash,
+# and only then writes the manifest. A release that cannot publish this
+# list must not publish the installer. THIRD-PARTY.txt (inside the
+# installer) points at that section. (The manifest written on 06/10/2026
+# for the .deb alone says the .deb bundles nothing; publishing this list
+# replaces it.)
+#
+# Why host them rather than point upstream: GPL-3 section 6 and the LGPL
+# let a distributor point elsewhere only while that elsewhere stays up, for
+# as long as the binaries are offered (OpenHamShack DATV's sources.txt has the
+# longer argument). A copy on our own server is the one we can vouch for.
+#
+# Fields, separated by "|" (spaces around them are trimmed):
+#   file | sha256 | licence | installers that carry it | what it is the source of | url [fallback url ...]
+# A line starting ">" is prose shown on the source site under the list.
+#
+# Most lines are OpenHamShack DATV's, for the same pinned binaries (Qt, PyQt6,
+# Paramiko, libiio and its libraries, ADI's drivers, FFmpeg 9.0.2
+# essentials); DATV's sources.txt says how each was identified. New here:
+# libhackrf and the libusb it was built against (conda-forge's recipes name
+# their source tarballs and hashes, read from each package's info/recipe on
+# 08/10/2026). Not here: libmpv and its libraries (ATV does not carry it),
+# ffplay (left out of the bundle), NB's WSJT-X and codec2.
+#
+# FFmpeg's open questions are DATV's and stay open here too, since this is
+# the same binary: gyan.dev's cairo and libgme snapshots name no commit, and
+# media-autobuild_suite's configuration for the build is not published.
+
+# --- Windows: Qt, PyQt6 and the Python packages -----------------------------
+
+pyqt6-6.11.0.tar.gz | 45dd60aa69976de1918b5ced6b4e7b6a25abd2a919ecef5fd5826ecc76718889 | GPL-3.0 | ATV Windows, first installer onward | PyQt6\QtCore, QtGui, QtWidgets.pyd (PyQt6 6.11.0) | https://files.pythonhosted.org/packages/source/P/PyQt6/pyqt6-6.11.0.tar.gz
+qtbase-everywhere-src-6.11.2.tar.xz | 5b2e00eccaf5a4d8c14134ffa0ea8dfd0a35ae1ffc7f8d87fa4305a1ed23cf22 | LGPL-3.0 | ATV Windows, first installer onward | PyQt6\Qt6\bin\Qt6Core, Qt6Gui, Qt6Network, Qt6Widgets.dll; the platforms, styles, generic and gif/ico/jpeg image-format plugins (Qt 6.11.2) | https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtbase-everywhere-src-6.11.2.tar.xz https://download.qt.io/official_releases/qt/6.11/6.11.2/submodules/qtbase-everywhere-src-6.11.2.tar.xz
+qtsvg-everywhere-src-6.11.2.tar.xz | d594337feca84c26fb67fe87b85e6a5c12fda404b611d905f9d138210c311876 | LGPL-3.0 | ATV Windows, first installer onward | PyQt6\Qt6\bin\Qt6Svg.dll and the qsvg and qsvgicon plugins (Qt 6.11.2) | https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtsvg-everywhere-src-6.11.2.tar.xz https://download.qt.io/official_releases/qt/6.11/6.11.2/submodules/qtsvg-everywhere-src-6.11.2.tar.xz
+qtimageformats-everywhere-src-6.11.2.tar.xz | cecd8900f34b6550076309bc94f62f828008b633a4239e0a08c86788f41001f8 | LGPL-3.0 | ATV Windows, first installer onward | the qicns, qtga, qtiff, qwbmp and qwebp image-format plugins (Qt 6.11.2) | https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qtimageformats-everywhere-src-6.11.2.tar.xz https://download.qt.io/official_releases/qt/6.11/6.11.2/submodules/qtimageformats-everywhere-src-6.11.2.tar.xz
+qttranslations-everywhere-src-6.11.2.tar.xz | 021684c1a7937a9fabc3b056a6698ad5978794caf9ac190fd6cc11399e67c014 | LGPL-3.0 | ATV Windows, first installer onward | PyQt6\Qt6\translations\*.qm (Qt 6.11.2) | https://download.qt.io/archive/qt/6.11/6.11.2/submodules/qttranslations-everywhere-src-6.11.2.tar.xz https://download.qt.io/official_releases/qt/6.11/6.11.2/submodules/qttranslations-everywhere-src-6.11.2.tar.xz
+paramiko-3.5.1.tar.gz | b2c665bc45b2b215bd7d7f039901b14b067da00f3a11e6640995fd58f2664822 | LGPL-2.1 | ATV Windows, first installer onward | paramiko (bundled as bytecode; Paramiko 3.5.1) | https://files.pythonhosted.org/packages/7d/15/ad6ce226e8138315f2451c2aeea985bf35ee910afb477bae7477dc3a8f3b/paramiko-3.5.1.tar.gz
+
+# --- Windows: libiio and the PlutoSDR drivers --------------------------------
+
+libiio-0.26.tar.gz | fb445fb860ef1248759f45d4273a4eff360534480ec87af64c6b8db3b99be7e5 | LGPL-2.1-or-later | ATV Windows, first installer onward | libiio\libiio.dll and iio.py (libiio 0.26; GitHub's archive of tag v0.26) | https://github.com/analogdevicesinc/libiio/archive/refs/tags/v0.26.tar.gz
+libusb-1.0.24.tar.bz2 | 7efd2685f7b327326dcfb85cee426d9b871fd70e22caa15bb68d595ce2a2b12a | LGPL-2.1-or-later | ATV Windows, first installer onward | libiio\libusb-1.0.dll (libusb 1.0.24) | https://github.com/libusb/libusb/releases/download/v1.0.24/libusb-1.0.24.tar.bz2
+libserialport-0.1.1.tar.gz | 4a2af9d9c3ff488e92fb75b4ba38b35bcf9b8a66df04773eba2a7bbf1fa7529d | LGPL-3.0-or-later | ATV Windows, first installer onward | libiio\libserialport-0.dll (libserialport 0.1.1) | https://sigrok.org/download/source/libserialport/libserialport-0.1.1.tar.gz
+dfu-util-0.8.tar.gz | 55cbde9be12a212bd84bce9d1e63941d9a16139ed0d4912401367eba1502f058 | GPL-2.0-or-later | ATV Windows, first installer onward | dfu-util.exe inside ADI's PlutoSDR-M2k-USB-Drivers.exe v0.9 (dfu-util 0.8, built by ADI) | https://dfu-util.sourceforge.net/releases/dfu-util-0.8.tar.gz
+libusb-1.0.19.tar.bz2 | 6c502c816002f90d4f76050a6429c3a7e0d84204222cbff2dce95dd773ba6840 | LGPL-2.1-or-later | ATV Windows, first installer onward | the libusb linked statically into that dfu-util.exe (libusb 1.0.19) | https://downloads.sourceforge.net/project/libusb/libusb-1.0/libusb-1.0.19/libusb-1.0.19.tar.bz2
+
+# --- Windows: FFmpeg 9.0.2 (gyan.dev essentials, DATV's pin) -----------------
+
+ffmpeg-9.0.2.tar.xz | 8c3850283eb25fa026482078a04051e0be17347b09ef81a0849bec15a96e002e | GPL-3.0 (as built) | ATV Windows, first installer onward | ffmpeg\ffmpeg.exe, ffprobe.exe (FFmpeg 9.0.2, gyan.dev essentials build) | https://ffmpeg.org/releases/ffmpeg-9.0.2.tar.xz
+x264-0480cb05fa188d37ae87e8f4fd8f1aea3711f7ee.tar.bz2 | f05c59f2e83d494c36307025dca2d3afc6b4d185f3a3453d06cc4fecd7094057 | GPL-2.0-or-later | ATV Windows, first installer onward | libx264 in ffmpeg\ffmpeg.exe (x264 0.165.3223) | https://code.videolan.org/videolan/x264/-/archive/0480cb05fa188d37ae87e8f4fd8f1aea3711f7ee/x264-0480cb05fa188d37ae87e8f4fd8f1aea3711f7ee.tar.bz2
+x265-116b87573ed0cec20b75ccacd5641bf06f6e57bd.tar.gz | 2d53caffd91f6a1409f56ca2268e86484c405feb482cedf02f56dd57d2929bef | GPL-2.0-or-later | ATV Windows, first installer onward | libx265 in ffmpeg\ffmpeg.exe (x265 4.3-45-g116b875) | https://github.com/Multicorewareinc/x265/archive/116b87573ed0cec20b75ccacd5641bf06f6e57bd.tar.gz
+xvidcore-1.3.7.tar.bz2 | aeeaae952d4db395249839a3bd03841d6844843f5a4f84c271ff88f7aa1acff7 | GPL-2.0-or-later | ATV Windows, first installer onward | libxvid in ffmpeg\ffmpeg.exe (Xvid 1.3.7) | https://downloads.xvid.com/downloads/xvidcore-1.3.7.tar.bz2
+vid.stab-e2445c4081658318223762a696eb1c645c2d7168.tar.gz | 39506541c073b2be1e376b59fc90e6a79ba4d16cbf4a4a2a58a6badc3a4ce1c3 | GPL-2.0-or-later | ATV Windows, first installer onward | libvidstab in ffmpeg\ffmpeg.exe (vid.stab git e2445c4) | https://github.com/georgmartius/vid.stab/archive/e2445c4081658318223762a696eb1c645c2d7168.tar.gz
+rubberband-4.0.0.tar.bz2 | af050313ee63bc18b35b2e064e5dce05b276aaf6d1aa2b8a82ced1fe2f8028e9 | GPL-2.0-or-later | ATV Windows, first installer onward | librubberband in ffmpeg\ffmpeg.exe (Rubber Band 4.0.0) | https://breakfastquay.com/files/releases/rubberband-4.0.0.tar.bz2
+fribidi-c928e4c77549de59e057f72bbbec1e38ce8b43bd.tar.gz | 9a4bb6ec1a1aff287a6b5e3ff6112cb1fa6c066697674c6b0b8fd5260ee904ba | LGPL-2.1-or-later | ATV Windows, first installer onward | libfribidi in ffmpeg\ffmpeg.exe (fribidi v1.0.16-19-gc928e4c) | https://github.com/fribidi/fribidi/archive/c928e4c77549de59e057f72bbbec1e38ce8b43bd.tar.gz
+openal-soft-7532541b537a4c03b2066277bfbe77150f147bfa.tar.gz | e6b3c3973a5c21cb71a3ad190d600508e957b5e5096c7d9a263dd0e0a90d9214 | LGPL-2.0-or-later | ATV Windows, first installer onward | OpenAL Soft in ffmpeg\ffmpeg.exe (1.25.2-48-g7532541) | https://github.com/kcat/openal-soft/archive/7532541b537a4c03b2066277bfbe77150f147bfa.tar.gz
+srt-cae8f624a5a777066d12512f7b60debc260bdfa5.tar.gz | 53bd9d85536fa903a250544df92fbc94529ffa307afcbf8f1636c8decdfabf98 | MPL-2.0 | ATV Windows, first installer onward | libsrt in ffmpeg\ffmpeg.exe (SRT v1.5.7-7-gcae8f62) | https://github.com/Haivision/srt/archive/cae8f624a5a777066d12512f7b60debc260bdfa5.tar.gz
+mingw-w64-lame-3.100-3.src.tar.zst | dfd51143ea25aa0b67f5d355127b8a89a27379b1b128f0b2f9eed7c3327656ab | LGPL-2.0-or-later | ATV Windows, first installer onward | libmp3lame in ffmpeg\ffmpeg.exe (LAME 3.100: the release tarball, with MSYS2's build files and patches) | https://repo.msys2.org/mingw/sources/mingw-w64-lame-3.100-3.src.tar.zst
+mingw-w64-gnutls-3.8.13-3.src.tar.zst | 7889cd73810d909642c0f122b40cfe0eaec5b0d2985804f145cd90c6a51c0435 | LGPL-2.1-or-later | ATV Windows, first installer onward | GnuTLS in ffmpeg\ffmpeg.exe (3.8.13, MSYS2's package) | https://repo.msys2.org/mingw/sources/mingw-w64-gnutls-3.8.13-3.src.tar.zst
+mingw-w64-nettle-4.0-1.src.tar.zst | 453187e86139bce3c5b94542cc709ead7f523f0fc33ce4cc2b8fe9d5a9719cdd | LGPL-3.0-or-later or GPL-2.0-or-later | ATV Windows, first installer onward | Nettle in ffmpeg\ffmpeg.exe, under GnuTLS (4.0, MSYS2's package) | https://repo.msys2.org/mingw/sources/mingw-w64-nettle-4.0-1.src.tar.zst
+mingw-w64-gmp-6.3.0-2.src.tar.zst | f288f944fd9609db220bcf6a8dd0703a5674eeb906ef35eb8485bb8192135994 | LGPL-3.0-or-later or GPL-2.0-or-later | ATV Windows, first installer onward | GMP in ffmpeg\ffmpeg.exe (6.3.0, MSYS2's package) | https://repo.msys2.org/mingw/sources/mingw-w64-gmp-6.3.0-2.src.tar.zst
+mingw-w64-libtasn1-4.21.0-1.src.tar.zst | c626129c5131eef0a45c736274f0844747605a105161cc0f7d39f6e1c70ed0ff | LGPL-2.1-or-later | ATV Windows, first installer onward | libtasn1 in ffmpeg\ffmpeg.exe, under GnuTLS (4.21.0, MSYS2's package) | https://repo.msys2.org/mingw/sources/mingw-w64-libtasn1-4.21.0-1.src.tar.zst
+mingw-w64-libssh-0.12.2-1.src.tar.zst | b935d915b5392e573f65855c491e476ae38860d3929d2b564e507aa660c3e05b | LGPL-2.1 | ATV Windows, first installer onward | libssh in ffmpeg\ffmpeg.exe (0.12.2, MSYS2's package) | https://repo.msys2.org/mingw/sources/mingw-w64-libssh-0.12.2-1.src.tar.zst
+mingw-w64-zeromq-4.3.5-5.src.tar.zst | f45afb530b95c9049f8f0d28984f6c484e65e757063de74859dc32be1d2a5f25 | MPL-2.0 | ATV Windows, first installer onward | libzmq in ffmpeg\ffmpeg.exe (ZeroMQ 4.3.5, MSYS2's package) | https://repo.msys2.org/mingw/sources/mingw-w64-zeromq-4.3.5-5.src.tar.zst
+mingw-w64-libiconv-1.19-1.src.tar.zst | 74428280c17094da5b702c29b2e1a0abae59556ea5dfdd65705cc8ccc1e000fb | LGPL-2.1-or-later | ATV Windows, first installer onward | libiconv in ffmpeg\ffmpeg.exe (MSYS2's package, 1.19) | https://repo.msys2.org/mingw/sources/mingw-w64-libiconv-1.19-1.src.tar.zst
+
+# --- Windows: libhackrf (conda-forge) ----------------------------------------
+
+hackrf-2026.01.3.tar.xz | d2b76a1115d9b4df648c29efb2f3c8e80009b7cf9a8adf37abbfdba72101b086 | GPL-2.0 (libhackrf itself BSD-3-Clause) | ATV Windows, first installer onward | hackrf\hackrf-0.dll (libhackrf 2026.01.3, conda-forge libhackrf0-2026.01.3-hfd05255_0; its one patch renames the DLL) | https://github.com/greatscottgadgets/hackrf/releases/download/v2026.01.3/hackrf-2026.01.3.tar.xz
+libusb-1.0.29.tar.bz2 | 5977fc950f8d1395ccea9bd48c06b3f808fd3c2c961b44b0c2e6e29fc3a70a85 | LGPL-2.1-or-later | ATV Windows, first installer onward | hackrf\libusb-1.0.dll (libusb 1.0.29, conda-forge libusb-1.0.29-h1839187_0) | https://github.com/libusb/libusb/releases/download/v1.0.29/libusb-1.0.29.tar.bz2
+
+> Each tarball is the source release, commit or package that the binaries
+> were built from, unmodified. The builds were made by others: Qt and PyQt6
+> by The Qt Company and Riverbank Computing, libiio and its libraries and
+> the PlutoSDR drivers by Analog Devices, FFmpeg by gyan.dev
+> (ffmpeg-9.0.2-essentials_build), libhackrf and its libusb by conda-forge
+> (https://github.com/conda-forge/hackrf-feedstock and libusb-feedstock,
+> whose recipes and patches are there). Where gyan.dev took a library from
+> a git branch rather than a release, its tarball is that commit's archive;
+> where it took one from MSYS2, it is MSYS2's source package.
+>
+> Also inside the installer, needing no source by their licences (their
+> notices are in the installed _internal\licences folder): the PyInstaller
+> bootloader (GPL-2.0 with its bootloader exception); libxml2 2.9.12,
+> mingw-w64 winpthreads, PyQt6-sip, NumPy and OpenBLAS, PortAudio and
+> PyAudio, cryptography, cffi, bcrypt, PyNaCl, Python 3.13 (PSF), Mesa's
+> opengl32sw.dll and ADI's driver INFs (MIT, BSD and similar); Microsoft's
+> Visual C++ runtime and DPInst/WinUSB co-installers.

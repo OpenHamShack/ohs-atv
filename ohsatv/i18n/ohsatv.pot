@@ -1,0 +1,243 @@
+# English template for the ohsatv gettext domain (docs/I18N.md).
+# Written by tools/i18n.py pot; do not edit.
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en\n"
+
+#: ohsatv/server/app.py:352
+msgid "Another remote is transmitting"
+msgstr ""
+
+#: ohsatv/server/app.py:614
+msgid "Control"
+msgstr ""
+
+#: ohsatv/server/app.py:891
+msgid "No picture is being received"
+msgstr ""
+
+#: ohsatv/server/app.py:428
+msgid "Not transmitting under a remote lease"
+msgstr ""
+
+#: ohsatv/server/app.py:681
+msgid "On the air"
+msgstr ""
+
+#: ohsatv/server/app.py:686
+msgid "OpenHamShack ATV"
+msgstr ""
+
+#: ohsatv/server/app.py:797
+#, python-brace-format
+msgid "Page {label} has not been received"
+msgstr ""
+
+#: ohsatv/server/app.py:683
+msgid "Picture"
+msgstr ""
+
+#: ohsatv/server/app.py:844
+#: ohsatv/server/app.py:879
+msgid "Pictures need Pillow (Debian: python3-pil), which is not installed"
+msgstr ""
+
+#: ohsatv/server/app.py:684
+msgid "Problem"
+msgstr ""
+
+#: ohsatv/server/app.py:680
+msgid "Radio"
+msgstr ""
+
+#: ohsatv/server/app.py:248
+#, python-brace-format
+msgid "Receive with {app}"
+msgstr ""
+
+#: ohsatv/server/app.py:682
+msgid "Receiving"
+msgstr ""
+
+#: ohsatv/server/app.py:513
+#: ohsatv/server/app.py:546
+msgid "Reconnecting to the station…"
+msgstr ""
+
+#: ohsatv/server/app.py:680
+msgid "Running"
+msgstr ""
+
+#: ohsatv/server/shack.py:265
+#, python-brace-format
+msgid "The controller has not answered for {s:.0f} s, so {device} is no longer held"
+msgstr ""
+
+#: ohsatv/server/shack.py:216
+#, python-brace-format
+msgid "The controller refused to put {device} on the air (HTTP {code})"
+msgstr ""
+
+#: ohsatv/server/shack.py:263
+#, python-brace-format
+msgid "The controller took {device} back"
+msgstr ""
+
+#: ohsatv/server/shack.py:199
+#, python-brace-format
+msgid "The controller would not change {device} to {mode} (HTTP {code})"
+msgstr ""
+
+#: ohsatv/server/shack.py:186
+#, python-brace-format
+msgid "The controller would not lend {device} (HTTP {code})"
+msgstr ""
+
+#: ohsatv/server/shack.py:146
+#, python-brace-format
+msgid "The controller's hardware broker did not answer ({why})"
+msgstr ""
+
+#: ohsatv/server/run.py:58
+#, python-brace-format
+msgid "The controller's station profile answered HTTP {code}"
+msgstr ""
+
+#: ohsatv/server/run.py:56
+#, python-brace-format
+msgid "The controller's station profile did not answer ({why})"
+msgstr ""
+
+#: ohsatv/server/app.py:362
+msgid "The radio is not running"
+msgstr ""
+
+#: ohsatv/server/app.py:557
+#: ohsatv/server/app.py:481
+msgid "The radio was handed to another app"
+msgstr ""
+
+#: ohsatv/server/app.py:603
+msgid "The request is not JSON"
+msgstr ""
+
+#: ohsatv/server/app.py:599
+msgid "The request is too large"
+msgstr ""
+
+#: ohsatv/server/app.py:605
+msgid "The request must be a JSON object"
+msgstr ""
+
+#: ohsatv/server/app.py:651
+#, python-brace-format
+msgid "There is nothing at {path}"
+msgstr ""
+
+#: ohsatv/server/app.py:635
+msgid "This app answers only through the OpenHamShack controller."
+msgstr ""
+
+#: ohsatv/server/app.py:646
+msgid "This needs the View level."
+msgstr ""
+
+#: ohsatv/server/app.py:615
+#, python-brace-format
+msgid "This needs the {needs} level; your level for {app} is {level}."
+msgstr ""
+
+#: ohsatv/server/app.py:614
+msgid "Transmit"
+msgstr ""
+
+#: ohsatv/server/app.py:431
+msgid "Transmit is held by another remote"
+msgstr ""
+
+#: ohsatv/server/app.py:502
+#: ohsatv/server/app.py:416
+#, python-brace-format
+msgid "Transmit stopped: {why}"
+msgstr ""
+
+#: ohsatv/server/app.py:371
+#, python-brace-format
+msgid "Transmit with {app}"
+msgstr ""
+
+#: ohsatv/server/app.py:694
+msgid "Use OpenHamShack Remote to operate this app. This page shows how it is."
+msgstr ""
+
+#: ohsatv/server/app.py:614
+msgid "View"
+msgstr ""
+
+#: ohsatv/server/shack.py:185
+msgid "another app"
+msgstr ""
+
+#: ohsatv/server/app.py:680
+#: ohsatv/server/app.py:681
+msgid "no"
+msgstr ""
+
+#: ohsatv/server/app.py:455
+#, python-brace-format
+msgid "remote controller lost (no word from {id} for {s:.0f} s)"
+msgstr ""
+
+#: ohsatv/server/app.py:754
+msgid "remote must be 1 to 64 letters, digits, '.', '_', ':' or '-'"
+msgstr ""
+
+#: ohsatv/server/app.py:552
+msgid "stopped by the controller"
+msgstr ""
+
+#: ohsatv/server/app.py:744
+#: ohsatv/server/app.py:769
+#, python-brace-format
+msgid "stopped by {user}"
+msgstr ""
+
+#: ohsatv/server/app.py:314
+msgid "the app is stopping"
+msgstr ""
+
+#: ohsatv/server/app.py:680
+#: ohsatv/server/app.py:681
+msgid "yes"
+msgstr ""
+
+#: ohsatv/server/shack.py:184
+#, python-brace-format
+msgid "{app} has this radio ({device}); it was not taken from it"
+msgstr ""
+
+#: ohsatv/server/app.py:670
+#, python-brace-format
+msgid "{app} is transmitting"
+msgstr ""
+
+#: ohsatv/server/shack.py:193
+#, python-brace-format
+msgid "{device} is not held"
+msgstr ""
+
+#: ohsatv/server/shack.py:207
+#, python-brace-format
+msgid "{device} is not held for transmitting"
+msgstr ""
+
+#: ohsatv/server/app.py:722
+#, python-brace-format
+msgid "{keys}: set in the station profile on the controller, not here"
+msgstr ""
+
+#: ohsatv/server/app.py:726
+#, python-brace-format
+msgid "{keys}: the controller looks after these"
+msgstr ""

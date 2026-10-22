@@ -1,0 +1,46 @@
+# Literals at a sink that are not language (OpenHamShack I18N.md section 3.3).
+# One per line, every entry with a reason; an entry that matches nothing
+# fails the check. Literals still waiting to be converted are not exceptions:
+# they are in i18n-pending.txt.
+#
+# ATV's own: two unit symbols drawn alone as axis captions (a number beside
+# a unit goes through ohsatv.i18n.fmt, whose separator is the locale's; the
+# symbol itself is SI and the same in every language), and the caption the
+# screenshot tool sends on page 888, which is transmitted content and stays
+# as the operator would type it (docs/I18N.md: the picture on air is not UI).
+# The editor's (ohstxt): its key sequences; the live runner's log lines,
+# which _say() deduplicates for python3 -m ohstxt.live's stdout (a service's
+# journal, like check.py's and receive.py's prints) and which are caught
+# only because ATV's sink list, now shared, names its toast helper _say too;
+# and a packet field's protocol name in the .t42 reader's results.
+# glob | "literal" (JSON) | reason
+ohsatv/ui/instruments.py | "µs" | the SI symbol for microseconds, alone as the waveform monitor's axis caption; the same in every language
+ohsatv/ui/spectrum.py | "MHz" | the SI symbol for megahertz, alone as the spectrum's axis caption; the same in every language
+ohsatv/ui/screenshots.py | "Subtitles on page 888 | typed live on the transmit panel" | a subtitle the screenshot tool transmits on page 888: on-air content, not the window's words
+ohstxt/ui/*.py | "Ctrl+A" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+C" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+E" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+G" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+I" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+K" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+L" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+N" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+O" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+Q" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+R" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+S" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+Shift+N" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+Shift+O" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+Shift+S" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+Shift+Z" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+T" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+U" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+V" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+X" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+Y" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+Z" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/ui/*.py | "Ctrl+{i}" | a key sequence in Qt's portable form; QKeySequence shows it in the user's language
+ohstxt/live/runner.py | "{path.name}: not written: {e}" | the live runner's log line (python3 -m ohstxt.live's stdout or journal), not the window; _say here is a log, not ATV's toast
+ohstxt/live/runner.py | "source {name}: {error}; keeping data from {time.strftime('%H:%M', time.localtime(f.good_at)) if f.good_at else 'nowhere'}" | the live runner's log line (python3 -m ohstxt.live's stdout or journal), not the window; _say here is a log, not ATV's toast
+ohstxt/live/runner.py | "source {name}: ok" | the live runner's log line (python3 -m ohstxt.live's stdout or journal), not the window; _say here is a log, not ATV's toast
+ohstxt/t42.py | "MRAG" | EN 300 706's name for the packet field that failed to decode (Magazine and Row Address Group): a protocol token in the reader's result

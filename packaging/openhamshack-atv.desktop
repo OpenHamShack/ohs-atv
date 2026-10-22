@@ -1,0 +1,19 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=OpenHamShack ATV
+GenericName=Amateur Television Transceiver
+Comment=Send and receive analogue PAL amateur television (AM-VSB and FM-ATV) with a Pluto SDR
+Exec=openhamshack-atv
+Icon=openhamshack-atv
+Terminal=false
+StartupNotify=true
+Categories=HamRadio;Network;
+Keywords=ATV;teletext;amateur television;fast-scan;PAL;FM-ATV;AM-VSB;23cm;6cm;5.8GHz;70cm;ADALM-Pluto;Pluto;LibreSDR;SDR;test card;ham radio;transceiver;
+Actions=teletext;
+
+# The Teletext editor alone (ohstxt, included in this package), from the
+# entry's right-click menu: making pages needs no radio.
+[Desktop Action teletext]
+Name=Teletext editor
+Exec=openhamshack-atv --teletext

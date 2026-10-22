@@ -1,0 +1,27 @@
+DE,News index
+PN,10000
+SC,0000
+PS,8000
+CT,8,T
+OL,0,        OHS-ATV %%# %%a %e %%b C%H:%M/%S
+OL,1,T]S )p `8!                              
+OL,2,T]SMpppppppG OHS-ATV CNEWS            
+OL,4,T]F           Amateur TV teletext       
+OL,5,T,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+OL,6,GClub rally draws record crowd  F101    
+OL,7,GRepeater back on air after stormF102   
+OL,8,GNew 23cm beacon heard in EuropeF103    
+OL,9,GContest results: who came firstF104    
+OL,11,CSPORT            CWEATHER              
+OL,12,GFootball    F201  GToday        F301   
+OL,13,GCricket     F210  GOutlook      F302   
+OL,14,GMotor sport F220  GPropagation  F303   
+OL,16,CSERVICE          CSTATION              
+OL,17,GTest page   F199  GSchedules    F400   
+OL,18,GNewsflash   F150  GCallsigns    F410   
+OL,19,GIndex       F100  GContact      F420   
+OL,21,Qppppppppppppppppppppppppppppppppppppppp
+OL,22,A]CPages from GOHS ATV TeletextC  P100  
+OL,23,Q#######################################
+OL,24,AHeadlinesBSport    CWeather  FIndex    
+FL,101,200,300,100,8FF,100

@@ -1,0 +1,1325 @@
+<!doctype html>
+<!--
+  The OpenHamShack ATV user guide: one file, published as a web page on the
+  site and printed to the A4 PDF, both by tools/site-build.py. Images are
+  referenced as img/<name>; the build makes each one from docs/screenshots
+  (resized, or cut out by the CROPS table in site-build.py), so open the
+  built copy, not this one, to see the pictures. {{VERSION}}, {{DATE}} and
+  {{PDF}} are filled in by the build.
+
+  Every statement here was checked against the code (ohsatv/) and the docs
+  (DESIGN.md, docs/atv-research.md, docs/PERF.md) at the time of writing.
+  When the program changes, change this with it; a guide that describes a
+  feature the program does not have is worse than no guide.
+
+  No external assets: fonts are DejaVu (on every Debian desktop), and
+  everything else is inline.
+-->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenHamShack ATV user guide</title>
+<meta name="description" content="The OpenHamShack ATV user guide: installing, choosing a radio, receiving and transmitting analogue amateur television on 70cm, 23cm and 6cm.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+/* Screen and print from one sheet. On screen the page follows the site's
+   tokens (dark at rest, light on request); printed it is always black on
+   white, A4, with figures, tables and headings kept whole across pages. */
+:root {
+  --bg: #0a0d12; --card: #10141b; --ink: #e8edf4; --dim: #a3adbb; --line: #232a36;
+  --accent: #4fd1e8; --ok: #3ddc84; --warn: #ffb547; --err: #ff5d6c; --code: #171c25; --pin: #4fd1e8;
+  --pin-ink: #041016;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #eef1f5; --card: #ffffff; --ink: #0f1722; --dim: #4a5566; --line: #dde2e9;
+    --accent: #0a8fb0; --ok: #12a35a; --warn: #b87400; --err: #c8283a; --code: #f3f5f8;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body { font: 16px/1.6 "DejaVu Sans", "Segoe UI", system-ui, sans-serif; }
+main { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; }
+a { color: var(--accent); }
+h1, h2, h3, h4 { line-height: 1.25; }
+h2 { font-size: 26px; margin: 56px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+h3 { font-size: 19px; margin: 28px 0 8px; }
+h4 { font-size: 16px; margin: 20px 0 6px; }
+p, li { orphans: 3; widows: 3; }
+code, kbd, .mono { font-family: "DejaVu Sans Mono", ui-monospace, monospace; font-size: .88em; }
+code { background: var(--code); padding: 1px 5px; border-radius: 4px; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px;
+  background: var(--code); white-space: nowrap; }
+pre { background: var(--code); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px;
+  white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0 16px; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 6px 9px; border-bottom: 1px solid var(--line); }
+th { color: var(--dim); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .3px; }
+tr, figure, pre, .callout, .pins li { break-inside: avoid; page-break-inside: avoid; }
+td.yes { color: var(--ok); font-weight: 700; }
+td.no { color: var(--err); font-weight: 700; }
+td.part { color: var(--warn); font-weight: 700; }
+figure { margin: 18px 0 22px; }
+figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; }
+figure.narrow img { width: auto; max-width: 100%; max-height: 640px; margin: 0 auto; }
+figure.half { max-width: 430px; margin-left: auto; margin-right: auto; }
+figcaption { color: var(--dim); font-size: 14px; margin-top: 6px; }
+.callout { border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 6px;
+  padding: 10px 14px; margin: 16px 0; background: var(--card); }
+.callout.warn { border-left-color: var(--warn); }
+.callout.danger { border-left-color: var(--err); }
+.callout > :first-child { margin-top: 0; }
+.callout > :last-child { margin-bottom: 0; }
+.callout b.lead { display: block; margin-bottom: 2px; }
+
+/* Annotated screenshots: numbered pins over the image, positioned in
+   percent of its size so they stay put at any width, and the same numbers
+   in the list under it. */
+.shot { position: relative; }
+.pin { position: absolute; transform: translate(-50%, -50%); width: 26px; height: 26px; border-radius: 50%;
+  background: var(--pin); color: var(--pin-ink); font: 700 13px/26px "DejaVu Sans", sans-serif; text-align: center;
+  box-shadow: 0 0 0 2px #0a0d12, 0 1px 4px rgba(0,0,0,.6); }
+ol.pins { padding-left: 0; list-style: none; counter-reset: pin; columns: 2; column-gap: 28px; font-size: 14.5px; }
+ol.pins li { counter-increment: pin; position: relative; padding-left: 32px; margin: 0 0 8px; }
+ol.pins li::before { content: counter(pin); position: absolute; left: 0; top: 1px; width: 22px; height: 22px;
+  border-radius: 50%; background: var(--pin); color: var(--pin-ink); font: 700 12px/22px "DejaVu Sans", sans-serif;
+  text-align: center; }
+
+.cover { text-align: left; padding: 40px 0 8px; }
+.cover img { width: 96px; height: 96px; }
+.cover h1 { font-size: 40px; margin: 16px 0 4px; }
+.cover .sub { font-size: 20px; color: var(--dim); margin: 0; }
+.cover .meta { color: var(--dim); font-size: 14px; margin-top: 18px; }
+.toc ol { padding-left: 22px; columns: 2; column-gap: 32px; }
+.toc li { margin: 2px 0; break-inside: avoid; }
+.toc a { text-decoration: none; }
+.screen-only { }
+.dl { margin-top: 14px; }
+.dl a { display: inline-block; background: var(--accent); color: #041016; font-weight: 700; text-decoration: none;
+  padding: 9px 14px; border-radius: 8px; }
+
+@media (max-width: 640px) {
+  ol.pins, .toc ol { columns: 1; }
+  .pin { width: 20px; height: 20px; font-size: 11px; line-height: 20px; }
+}
+
+@page { size: A4; }
+@media print {
+  :root {
+    --bg: #ffffff; --card: #f6f8fa; --ink: #15191f; --dim: #4f5a68; --line: #cfd6df;
+    --accent: #0a6f8a; --ok: #0d7a43; --warn: #9a6100; --err: #b3202f; --code: #f1f4f7; --pin: #ffd23f;
+    --pin-ink: #111;
+  }
+  body { font-size: 10.5pt; line-height: 1.5; }
+  main { max-width: none; padding: 0; }
+  h2 { font-size: 17pt; margin-top: 0; break-before: page; page-break-before: always; }
+  h3 { font-size: 13pt; }
+  h4 { font-size: 11pt; }
+  h2, h3, h4 { break-after: avoid; page-break-after: avoid; }
+  table { font-size: 9.5pt; }
+  pre { font-size: 9pt; }
+  figcaption, ol.pins { font-size: 9.5pt; }
+  .pin { width: 20px; height: 20px; font-size: 10.5px; line-height: 20px; box-shadow: 0 0 0 1.5px #111; }
+  ol.pins li::before { box-shadow: 0 0 0 1px #111; }
+  a { color: var(--ink); text-decoration: none; }
+  .screen-only { display: none; }
+  .cover { padding-top: 120px; }
+  .cover h1 { font-size: 34pt; }
+  .toc { break-before: page; page-break-before: always; }
+  .toc h2 { break-before: auto; page-break-before: auto; }
+  figure.narrow img { max-height: 200mm; }
+}
+</style>
+</head>
+<body>
+<main>
+
+<section class="cover">
+  <img src="img/openhamshack-atv.svg" alt="">
+  <h1>OpenHamShack ATV</h1>
+  <p class="sub">User guide — analogue amateur television on 70cm, 23cm and 6cm</p>
+  <p class="meta">Version {{VERSION}} · {{DATE}} · GM4BRI</p>
+  <p class="meta">Formerly OpenHamShack ATV: the same program, renamed in October 2026.</p>
+  <div class="callout warn">
+    <b class="lead">Read this first</b>
+    <p>OpenHamShack ATV is verified end to end against its own <b>simulated radio</b>, and has now been <b>on the air
+    at the bench</b>: a Pluto nano on USB and a LibreSDR on Ethernet, each transmitting to the other on 23cm, with
+    the antennas a short distance apart. Off-air pictures have been received in <b>FM-ATV colour with sound</b>, in
+    <b>AM-VSB colour</b>, and in both <b>narrow formats</b> (<a href="#narrow">section 10</a>). That is two of the
+    author's own radios on one bench, not a contact with another station over a real path. The Pluto+, a stock
+    ADALM-Pluto and the HackRF are untried; where this guide describes those, it describes what the program is
+    written to do, not something that has been seen to work.</p>
+    <p>Transmitting needs an amateur licence. <b>You are responsible</b> for the frequency, the bandwidth, the power
+    and your identification. The program's guard helps you; it does not hold your licence.</p>
+  </div>
+  <p class="screen-only dl"><a href="{{PDF}}">Download this guide as a PDF (A4)</a></p>
+</section>
+
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#about">What OpenHamShack ATV is</a></li>
+    <li><a href="#install">Installing</a></li>
+    <li><a href="#first-run">First run</a></li>
+    <li><a href="#radio">Choosing a radio and its settings</a></li>
+    <li><a href="#window">The main window</a></li>
+    <li><a href="#receive">Receiving</a></li>
+    <li><a href="#transmit">Transmitting</a></li>
+    <li><a href="#bands">The bands</a></li>
+    <li><a href="#sources">Picture and sound sources</a></li>
+    <li><a href="#limits">Bandwidth and radio limits</a></li>
+    <li><a href="#hackrf">Transmitting with a HackRF</a></li>
+    <li><a href="#sixcm">6cm on a Pluto</a></li>
+    <li><a href="#systems">AM-VSB and FM-ATV settings</a></li>
+    <li><a href="#extras">NICAM stereo</a></li>
+    <li><a href="#trouble">Troubleshooting</a></li>
+    <li><a href="#keys">Keyboard shortcuts</a></li>
+    <li><a href="#files">Files and the command line</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================== -->
+<h2 id="about">1. What OpenHamShack ATV is</h2>
+
+<p>OpenHamShack ATV sends and receives <b>analogue fast-scan amateur television</b>: 625-line PAL pictures with sound,
+the way ATV has been done since long before digital. One program on a Linux computer does all of it — it draws the
+picture, puts your callsign in it, modulates it and sends it out of a software-defined radio; and it receives,
+demodulates and decodes pictures from other stations, with the instruments to see how good they are.</p>
+
+<table>
+  <tr><th>System</th><th>What it is</th><th>Bands</th></tr>
+  <tr><td><b>AM-VSB</b></td><td>PAL on an amplitude-modulated carrier with a vestigial lower sideband, as UK System I
+  broadcast television was: negative modulation, 5.5 MHz video, a 1.25 MHz vestige, an FM sound carrier 6.0 MHz above
+  vision.</td><td>23cm; 70cm (outside the bandplan, see <a href="#b70">8.1</a>)</td></tr>
+  <tr><td><b>FM-ATV</b></td><td>PAL frequency-modulating the carrier, to IARU Region 1 Technical Recommendation V.2:
+  3.5 MHz peak deviation (7 MHz peak to peak), 5 MHz video, CCIR 405 pre-emphasis, and an FM sound subcarrier at 6.0
+  MHz.</td><td>23cm, 6cm</td></tr>
+</table>
+
+<p>It works with the <b>Pluto family</b> of SDRs — ADALM-Pluto, Pluto+, Pluto nano and LibreSDR — through
+<code>libiio</code>, and can use a <b>HackRF One</b> as the transmitter while a Pluto-family radio (or the simulator)
+receives. Until you choose a radio, it runs on a <b>simulated radio</b>: stations on the bandplan channels and your
+own transmission looped back to you, so everything in this guide can be tried at the desk with nothing connected
+and nothing transmitted.</p>
+
+<h3>What it does not do</h3>
+<ul>
+  <li><b>Digital ATV (DATV)</b> — DVB-S and DVB-S2 are what the sibling programs, OpenHamShack DATV and OpenHamShack QO-100 WB, are for.</li>
+  <li><b>2m talkback.</b> ATV contacts are usually arranged on 144.750 MHz; use a separate rig.</li>
+  <li><b>Recording</b> received video to a video file. You can save a still (<kbd>Ctrl</kbd>+<kbd>S</kbd>), and
+  record the radio's raw IQ to play back through the receiver later (<a href="#iq">6.6</a>).</li>
+  <li><b>Control an amplifier</b> or a PTT sequencer. There is no PTT output; if your PA needs switching, do it
+  yourself, and key the PA before the program and unkey it after.</li>
+</ul>
+
+<!-- ============================================================== -->
+<h2 id="install">2. Installing</h2>
+
+<p>OpenHamShack ATV is one <code>.deb</code> package for every architecture — it is pure Python — and needs Python
+3.11 or newer. It is built and tested on <b>Debian 13</b>.</p>
+
+<h3>Debian 13</h3>
+<ol>
+  <li>Download <code>openhamshack-atv_&lt;version&gt;_all.deb</code> from the website, and check it against the SHA-256
+  printed there:
+  <pre><code>sha256sum openhamshack-atv_*_all.deb</code></pre></li>
+  <li>Install it with apt, from the folder you saved it in (the <code>./</code> matters):
+  <pre><code>sudo apt install ./openhamshack-atv_&lt;version&gt;_all.deb</code></pre>
+  <code>apt install ./…</code> — rather than <code>dpkg -i</code> — fetches what it needs from your normal
+  repositories in the same step.</li>
+  <li>Start <b>OpenHamShack ATV</b> from the applications menu (Ham Radio), or run <code>openhamshack-atv</code> in a
+  terminal.</li>
+</ol>
+
+<h3>Ubuntu 24.04 or newer</h3>
+<p>The same command. PyQt6 and PyAudio are in Ubuntu's <b>universe</b> component; if apt says it cannot find
+<code>python3-pyqt6</code>, enable it first with <code>sudo add-apt-repository universe</code>. Ubuntu 22.04 is too
+old: its Python is 3.10.</p>
+
+<h3>Raspberry Pi OS (Bookworm, 64-bit)</h3>
+<p>The same command; every package it needs is in the Raspberry Pi OS repositories. It has not been tried on a Pi,
+and how fast a Pi runs it has not been measured. Expect the lower sample rates to be comfortable and FM-ATV at 20
+MS/s to be beyond it; the status bar says when frames are being skipped (<a href="#limits">section 10</a>).</p>
+
+<div class="callout"><b class="lead">Untried distributions</b>
+Debian 12, Ubuntu 24.04 and Raspberry Pi OS meet the package's dependencies, but only Debian 13 has been used. If
+something fails on another, the terminal output of <code>openhamshack-atv</code> is what to report.</div>
+
+<h3>What gets installed</h3>
+<table>
+  <tr><th>Package</th><th>Why</th><th></th></tr>
+  <tr><td><code>python3-numpy</code>, <code>python3-pyqt6</code>, <code>python3-pyaudio</code></td><td>The signal
+  processing, the window, and sound</td><td>required</td></tr>
+  <tr><td><code>python3-libiio</code></td><td>The Pluto family: ADALM-Pluto, Pluto+, Pluto nano, LibreSDR</td>
+  <td>recommended</td></tr>
+  <tr><td><code>avahi-daemon</code></td><td>Finding a Pluto on the network by name</td><td>recommended</td></tr>
+  <tr><td><code>ffmpeg</code></td><td>The webcam and video-file picture sources</td><td>recommended</td></tr>
+  <tr><td><code>libhackrf0</code></td><td>A HackRF One as the transmitter</td><td>recommended</td></tr>
+</table>
+<p>apt installs the recommended packages by default. If one is missing, only that feature is disabled, and the
+program says which package to install — it still starts.</p>
+
+<p>To remove the program: <code>sudo apt remove openhamshack-atv</code>. Your settings and snapshots are in your home
+folder (<a href="#files">section 16</a>) and are left alone.</p>
+
+<!-- ============================================================== -->
+<h2 id="first-run">3. First run</h2>
+
+<p>The first time it opens, OpenHamShack ATV is on the <b>simulator</b>, on <b>23cm FM-ATV at 1255 MHz</b>, and within a
+second or two shows a simulated station's test card, locked in colour. Nothing is transmitted — the simulator has
+nothing to transmit with — and nothing will be until you ask.</p>
+
+<p>Before you can even transmit into the simulator, tell it who you are. Open <b>Settings</b> (the gear at the top
+right, or <kbd>Ctrl</kbd>+<kbd>,</kbd>) and on the <b>Station</b> page:</p>
+
+<figure class="half"><img src="img/settings-station.png" alt="Settings, Station page">
+<figcaption>Settings › Station: callsign, locator, a second ident line, and the licence acknowledgement.</figcaption></figure>
+
+<ul>
+  <li><b>Callsign</b> — drawn into every picture you transmit. Transmit is refused until it is set.</li>
+  <li><b>Locator</b> — your Maidenhead locator, shown under the callsign.</li>
+  <li><b>Second ident line</b> — anything short: your name, the band, the location.</li>
+  <li><b>Ident position</b> — which corner the callsign box goes in on webcam and video-file pictures. The test
+  card has it built into the middle.</li>
+  <li><b>Licence</b> — tick <i>I hold an amateur licence, I will identify, and I accept that I am responsible for what
+  is transmitted.</i> Transmit is locked until this is ticked.</li>
+</ul>
+<p>Press <b>Save</b>. Now press <b>PTT</b> (or hold <kbd>Space</kbd>): on the simulator your own test card goes
+round the loop and comes back as the received picture, with your callsign in it. That is the whole chain —
+generator, modulator, a noisy channel, demodulator, decoder — working on your machine.</p>
+
+<div class="callout"><b class="lead">Settings never transmit</b>
+Saving Settings restarts the radio when it has to (a new radio, sample rate or sound device), and it always comes
+back <i>receiving</i>. Nothing in the Settings dialog can key the transmitter.</div>
+
+<!-- ============================================================== -->
+<h2 id="radio">4. Choosing a radio and its settings</h2>
+
+<h3>4.1 Which radio does what</h3>
+<p>Analogue television is wide: a colour AM-VSB picture with sound needs a sample rate of 10 MS/s, and standard
+FM-ATV needs 20 MS/s. The radio chip in every Pluto-family SDR can do that; the <b>link to the computer</b> often
+cannot. Choose by what you want to send:</p>
+
+<table>
+  <tr><th>Radio</th><th>Link</th><th>Sustains</th><th>AM-VSB</th><th>Standard FM-ATV</th></tr>
+  <tr><td>ADALM-Pluto, Pluto nano</td><td>USB 2</td><td>receive 6.25 MS/s in full (<code>usb:</code>), about 15
+  with Tezuka's 8-bit receive; transmit about 5.2; 5 MS/s through the USB network address</td><td class="part">sends
+  mono, no sound, 2.4 MHz video; receives colour and sound with 8-bit receive</td><td class="no">no; narrow FM, and
+  colour and sound to another OpenHamShack ATV (<a href="#narrow">10</a>)</td></tr>
+  <tr><td>LibreSDR</td><td>Gigabit Ethernet</td><td>16.2 MS/s measured (its README says 20)</td>
+  <td class="yes">colour and sound</td><td class="part">at 4 MHz p-p, 16 MS/s, with colour and sound</td></tr>
+  <tr><td>Pluto+</td><td>Gigabit Ethernet</td><td>about 28 MS/s ceiling</td><td class="yes">colour and sound</td>
+  <td class="yes">yes</td></tr>
+  <tr><td>HackRF One (transmit only)</td><td>USB 2, 8-bit</td><td>20 MS/s</td><td class="yes">colour and sound</td>
+  <td class="yes">yes</td></tr>
+</table>
+<p>The Pluto nano and LibreSDR figures are measured with this program on a test laptop (an i5-1135G7). The nano
+receives 6.25 MS/s of 16-bit samples in full over libusb, but <b>transmits only about 5.2 MS/s</b> over USB; the radio
+runs one rate both ways, so to transmit it runs at 5 MS/s. On Tezuka firmware its packed 8-bit receive carries about
+15 MS/s, enough to <i>receive</i> colour and sound, but there is no 8-bit transmit. The LibreSDR tested sustained 16.2
+MS/s, not the 20 its README gives. The Pluto+ figure is a reported ceiling, not a sustained rate, and has not been
+tried. A HackRF carries 8-bit samples, half the bytes, so 20 MS/s fits USB 2.</p>
+
+<p>So, in practice:</p>
+<ul>
+  <li><b>Pluto on USB alone</b>: send a mono AM-VSB picture or narrow FM-ATV (1.2 MHz peak to peak, mono, no
+  sound — <a href="#limits">section 10</a>) that a standard FM-ATV receiver will show as a weak, low-contrast
+  picture; or, to another OpenHamShack ATV, colour and sound in the same channel with <a href="#narrow">Mini-MAC or
+  narrow colour PAL</a>. With 8-bit receive it receives AM-VSB at 10 MS/s and FM-ATV at 12.5 MS/s in colour with
+  sound.</li>
+  <li><b>LibreSDR or Pluto+ on Ethernet</b>: colour and sound both ways, on one radio. A LibreSDR at 16 MS/s
+  sends FM-ATV at 4 MHz peak to peak rather than IARU V.2's 7 MHz, which needs 20 MS/s.</li>
+  <li><b>Pluto (USB) to receive and a HackRF to transmit</b>: standard FM-ATV out, and receive carries on while you
+  transmit; but a USB Pluto still cannot <i>receive</i> standard FM-ATV (see <a href="#hackrf">section 11</a>).</li>
+</ul>
+
+<h3>4.2 Settings › Radio</h3>
+<figure class="half"><img src="img/settings-radio.png" alt="Settings, Radio page">
+<figcaption>Settings › Radio: the radio and its address, Find, 8-bit receive and the recordings; further down,
+the transmitter, the sample rates and the receiver gain.</figcaption></figure>
+
+<dl>
+  <dt><b>Radio</b></dt>
+  <dd><i>Simulator</i> (the default), <i>Pluto family</i>, or <i>Recording (IQ file)</i>, which plays an IQ
+  recording through the receiver instead of a radio (<a href="#iq">6.6</a>). All four Pluto-family radios use the
+  same driver.</dd>
+  <dt><b>Pluto address</b></dt>
+  <dd>A libiio address:
+    <ul>
+      <li><code>usb:</code> (the default) or <code>usb:&lt;bus&gt;.&lt;device&gt;.&lt;n&gt;</code> — a Pluto on
+      USB through libusb, the fastest route: 6.25 MS/s received in full. <code>iio_info -s</code> lists the
+      address.</li>
+      <li><code>ip:192.168.2.1</code> — the same Pluto through the network interface it makes. Works without any
+      USB permissions, but carries only about 5 MS/s.</li>
+      <li><code>ip:&lt;address&gt;</code> — a LibreSDR or Pluto+ on Ethernet, at its own address.</li>
+    </ul>
+    <b>Find</b> searches for radios on USB and the network (network discovery needs <code>avahi-daemon</code>)
+    and fills in the first it finds; the drop-down
+    beside it lists all of them. Choosing a radio there also sets <b>Radio</b> to <i>Pluto family</i> (the driver for
+    a Pluto, a nano and a LibreSDR alike), so <b>Save</b> switches to it: the radio restarts receiving, never
+    transmitting. Once a radio is open, the page says what it tunes, for example <i>This radio tunes
+    325–3800 MHz.</i></dd>
+  <dt><b>8-bit receive (Tezuka)</b></dt>
+  <dd>On by default. A Pluto on USB running Tezuka firmware can pack its receive samples into 8 bits, twice the
+  samples over the same link (up to about 15 MS/s, with 48 dB of range instead of 66). It is checked when the radio
+  opens, and used only above 6.25 MS/s; other firmware stays 16-bit. Receive only: there is no 8-bit
+  transmit.</dd>
+  <dt><b>Recordings</b></dt>
+  <dd>The recording to play when Radio is <i>Recording (IQ file)</i>, whether to play it in a loop, and Record
+  IQ's time limit (60 s), size limit (4000 MB) and folder (<a href="#iq">6.6</a>).</dd>
+  <dt><b>Transmitter</b></dt>
+  <dd><i>The receiving radio</i>, or <i>HackRF One (transmit only)</i> beside it. With a HackRF: <b>HackRF serial
+  number</b> (empty means the first one found) and <b>HackRF 14 dB amplifier</b> (off by default). See
+  <a href="#hackrf">section 11</a>.</dd>
+  <dt><b>Choose the best mode for each radio</b></dt>
+  <dd>On by default; see <a href="#profiles">4.3</a>.</dd>
+  <dt><b>AM-VSB sample rate</b> and <b>FM-ATV sample rate</b></dt>
+  <dd>One list each, 5 to 20 MS/s, and beside every rate what it carries — video bandwidth, colour or mono,
+  sound — with the rates your link cannot sustain marked. Defaults: 10 MS/s for AM-VSB, 20 MS/s for FM-ATV.</dd>
+  <dt><b>Receiver</b></dt>
+  <dd>Gain control: <i>slow attack</i> (default), <i>fast attack</i> or <i>manual</i>, and the manual gain.</dd>
+</dl>
+
+<p>The other Settings pages: <b>Transmit</b> (<a href="#transmit">section 7</a>), <b>AM-VSB</b> and <b>FM-ATV</b>
+(<a href="#systems">section 13</a>), <b>Simulator</b>, <b>Sources</b> (the webcam, see <a href="#sources">section
+9</a>), <b>Audio</b> (output and microphone devices, remembered by name, and the test-tone frequency) and
+<b>Display</b> (theme, waterfall palette, automatic waterfall contrast).</p>
+
+<h3 id="profiles">4.3 The best mode for each radio, chosen for you</h3>
+<p>The first time the program meets a combination of radios — the receiving radio, how it is connected, and the
+transmitter — it sets the sample rates and FM deviation that combination does best, and says what it chose: in a
+notice, and under the "What fits" card as <i>Chosen for this radio: …</i>.</p>
+<table>
+  <tr><th>Combination</th><th>What is chosen</th></tr>
+  <tr><td>A Pluto on USB (either address)</td><td>5 MS/s for both systems — what its USB link can transmit. AM-VSB:
+  a 2.4 MHz mono picture without sound. FM-ATV: reduced deviation, 1.2 MHz peak to peak with 1.6 MHz video, mono,
+  no sound subcarrier. The notice also offers <a href="#narrow">Mini-MAC and narrow colour PAL</a>, which carry
+  colour and sound in that channel to another OpenHamShack ATV; it never chooses them for you.</td></tr>
+  <tr><td>A Pluto on USB whose 8-bit receive answers (Tezuka firmware)</td><td>Set up to <i>receive</i> colour:
+  AM-VSB at 10 MS/s with sound; FM-ATV at 12.5 MS/s with the 5.5 MHz sound subcarrier and 1.2 MHz peak to peak.
+  It still transmits only about 5.2 MS/s, so PTT is refused at these rates: choose 5 MS/s to transmit from
+  it.</td></tr>
+  <tr><td>A radio on Ethernet that sustains about 16 MS/s, or of unknown speed (a LibreSDR)</td><td>FM-ATV at 16
+  MS/s, 4 MHz peak to peak with colour and the 6 MHz sound subcarrier; AM-VSB at 10 MS/s with colour and sound;
+  the picture format back to standard PAL.</td></tr>
+  <tr><td>A radio on Ethernet that sustains 20 MS/s or more</td><td>FM-ATV at 20 MS/s to IARU V.2; AM-VSB at 10
+  MS/s with colour and sound; the picture format back to standard PAL.</td></tr>
+  <tr><td>A HackRF transmitting (with any receiver)</td><td>The same full-width settings. If the receiver is a USB
+  Pluto, it will drop samples receiving at 20 MS/s, and the notice says so.</td></tr>
+  <tr><td>The simulator, or a radio whose link it cannot tell</td><td>Nothing is changed.</td></tr>
+</table>
+<p>It happens once per combination: anything you change afterwards stays changed until a different radio appears.
+To stop it altogether, turn off <b>Choose the best mode for each radio</b> in Settings › Radio.</p>
+
+<h3>4.4 The simulator</h3>
+<p>Settings › Simulator sets the simulated <b>carrier-to-noise ratio</b> (default 32 dB), whether <b>other
+stations</b> appear, and how far off frequency your own <b>looped-back</b> signal arrives. The simulated stations
+are an AM-VSB card on 433 MHz, FM-ATV on 1255 MHz, AM-VSB on 1275 MHz, an FM repeater output on 1310 MHz and FM-ATV
+on 5665 MHz. Lower the CNR to see what a weak signal does to the picture and the readings.</p>
+
+<h3 id="readback">4.5 Checking the radio does what it was told</h3>
+<p>On 5 October 2026 the test nano was twice found at 2.331 MS/s and 1254.667 MHz while the program had set 10
+MS/s and 1247 MHz; once it happened in the middle of a receive run, which stalled. Something outside the program set
+it (Tezuka's own control script can), and the window went on showing the figures the program had asked for. So,
+from the release after 0.1.7, a Pluto-family radio is checked:</p>
+<ul>
+  <li><b>When it opens</b> the driver reads back what it set — the sample rate, both RF bandwidths, the transmit
+  attenuation, the receive gain mode (and gain) — and <b>at every tune</b>, the LO. A value that differs is set once more
+  and noted if it then holds. A radio that still will not hold it is refused, with a sentence giving both figures:
+  <i>The radio will not hold its …: set to …, it reads …</i>.</li>
+  <li><b>While it runs</b>, once a second, the rate, the receive LO and (while transmitting) the transmit LO are
+  read again. A moved rate or receive LO is set back once; the "What fits" card shows in red <i>The radio's … moved
+  from … to … by itself; set back, it held</i>, or that it will not go back. While transmitting, a transmit LO
+  that moves <b>unkeys at once</b> — it would be transmitting off frequency — and so does a rate or receive LO
+  that will not go back. The reason is written to the transmit log.</li>
+  <li>The 8-bit receive check is made twice before falling back to 16-bit: twice on 5 October the first check
+  failed and simply opening the radio again found it.</li>
+</ul>
+<p>Tried on the nano by moving its rate and LO from outside while it received: each move was caught within a
+second and set back, and receive recovered by itself. The reads cost a few milliseconds a second on a thread of
+their own.</p>
+
+<!-- ============================================================== -->
+<h2 id="window">5. The main window</h2>
+
+<figure>
+  <div class="shot">
+    <img src="img/main-fm-23cm-1920.png" alt="The main window, receiving FM-ATV on 23cm">
+    <span class="pin" style="left:18.6%;top:1.9%">1</span>
+    <span class="pin" style="left:24%;top:8.9%">2</span>
+    <span class="pin" style="left:45.4%;top:3.9%">3</span>
+    <span class="pin" style="left:45.4%;top:7.2%">4</span>
+    <span class="pin" style="left:53.4%;top:3%">5</span>
+    <span class="pin" style="left:81.6%;top:3%">6</span>
+    <span class="pin" style="left:96.2%;top:8.8%">7</span>
+    <span class="pin" style="left:8.1%;top:12.6%">8</span>
+    <span class="pin" style="left:25.4%;top:13%">9</span>
+    <span class="pin" style="left:42.7%;top:12.6%">10</span>
+    <span class="pin" style="left:43.75%;top:38%">11</span>
+    <span class="pin" style="left:10.9%;top:66.8%">12</span>
+    <span class="pin" style="left:67.7%;top:66.8%">13</span>
+    <span class="pin" style="left:82.8%;top:12.2%">14</span>
+    <span class="pin" style="left:99%;top:43.5%">15</span>
+    <span class="pin" style="left:79.4%;top:48.6%">16</span>
+    <span class="pin" style="left:86.5%;top:55.9%">17</span>
+    <span class="pin" style="left:79.7%;top:60.2%">18</span>
+    <span class="pin" style="left:79%;top:69%">19</span>
+    <span class="pin" style="left:60%;top:98.7%">20</span>
+  </div>
+  <figcaption>Receiving a simulated FM-ATV station on 1255 MHz.</figcaption>
+</figure>
+
+<ol class="pins">
+  <li><b>Frequency.</b> The receive frequency in MHz — the vision carrier for AM-VSB, the carrier for FM. Click it to
+  type a frequency; turn the wheel over a digit to change that digit.</li>
+  <li><b>TX = RX, SPLIT, STEP.</b> The transmit frequency follows receive unless <b>SPLIT</b> is on; then it is
+  shown here, and clicking it sets it. <b>STEP</b> is the tuning step: click to change it.</li>
+  <li><b>Band</b>: 70cm, 23cm, 6cm. A band the radio cannot tune is greyed, with the reason.</li>
+  <li><b>System</b>: AM-VSB or FM-ATV.</li>
+  <li><b>Lock badges</b>: <b>SYNC</b> — the share of lines whose sync was found; <b>FIELD</b> — field sync found
+  and the line count held; <b>COLOUR</b> — PAL when colour is decoded (MAC for Mini-MAC); <b>SNR</b> — unweighted video
+  signal-to-noise from the blank lines; <b>JITTER</b> — line-timing jitter (<a href="#receive">section 6</a>).</li>
+  <li><b>The radio</b>: which, how it is reached, decoded frames per second and CPU. Click it to open Settings ›
+  Radio.</li>
+  <li><b>Keyboard shortcuts</b> (?), <b>light/dark theme</b>, and <b>Settings</b>.</li>
+  <li><b>The picture.</b> What is received — or, with <b>TX preview</b> chosen above it (or <kbd>P</kbd>), what you
+  are sending. NO SIGNAL when nothing is locked. The camera icon saves a snapshot. The label at the foot gives the
+  frequency, system and lock (or, in the TX preview, the source). Over the TX preview every label — TX PREVIEW, ON
+  AIR and that one — moves aside from your ident, in whichever corner it is, so you can always read both of its
+  lines.</li>
+  <li><b>Received / TX preview</b> switch.</li>
+  <li><b>Waveform monitor</b>: one line of the picture as a voltage against time, −0.3 V sync to 0.7 V peak white,
+  with the colour burst visible after sync. Choose the line with the arrows or the wheel; F1 or F2 is the field.</li>
+  <li><b>Vectorscope</b>: the colour, as phase and amplitude, with the targets for the six colour bars.</li>
+  <li><b>Receive band</b>: spectrum and waterfall of the whole sample band, the bandplan above it, channel markers,
+  the carrier, the sound subcarrier and the occupied bandwidth. Click to tune; click a channel marker to tune to it.
+  <b>Record IQ</b>, in its header, records what it shows (<a href="#iq">6.6</a>).</li>
+  <li><b>Band card</b>: the band's UK status, power limits, what the radio can do here, and its <b>channels</b> —
+  a green dot where you may transmit, grey for receive only. Click one to tune.</li>
+  <li><b>Transmit</b>: the outgoing picture as it will be sent (OUTGOING; ON AIR while transmitting) and the transmit
+  frequency.</li>
+  <li><b>Picture</b> and <b>Sound</b> sources (<a href="#sources">section 9</a>).</li>
+  <li><b>Ident</b>: your callsign box exactly as it will appear in vision. Always on.</li>
+  <li><b>Power (TX gain)</b>: drag to set; the red notch is the ceiling set in Settings, which the slider cannot
+  pass.</li>
+  <li><b>PTT</b>. Click to transmit and click again to stop, or hold <kbd>Space</kbd>. When transmit is refused
+  it reads TRANSMIT LOCKED, and the reason is written under it.</li>
+  <li><b>Warnings</b> about this frequency: bandplan overlaps and the like (<a href="#guard">7.6</a>). On 70cm a
+  red OUTSIDE THE BANDPLAN banner comes first.</li>
+  <li><b>Status strip</b>: the radio, sample rate and link, decoded frames per second, CPU, frames the decoder
+  skipped to keep up, and for AM-VSB the measured carrier offset. The clock is UTC.</li>
+</ol>
+
+<h3>The "What fits" card</h3>
+<p>Between the scopes and the transmit panel, this card says what your signal is at the current sample rate:</p>
+<figure class="half"><img src="img/crop-plan-am.png" alt="What fits at 10 MS/s, AM-VSB">
+<figcaption>AM-VSB at 10 MS/s: colour and sound fit, and the video is limited to 4.8 MHz.</figcaption></figure>
+<ul>
+  <li><b>Occupied</b> bandwidth on air, <b>Video</b> bandwidth, <b>Colour</b> (PAL, MONO, MAC or PAL 1.6),
+  <b>Sound</b> (the carrier offset, the subcarrier, DIGITAL, or NONE).</li>
+  <li>A strip showing the sample band with the carrier (C), the PAL subcarrier and the sound (S) in it.</li>
+  <li><b>✓ The signal fits this rate</b> — or <b>✕ The signal does not fit this rate: transmit is refused</b> —
+  and in plain sentences what was given up.</li>
+  <li>Marks when the link cannot keep up: <i>This link is reported to sustain … MS/s — expect dropped samples</i>,
+  <i>Samples are being dropped</i>, and HackRF underruns.</li>
+  <li>In red, a radio that changed its own rate or LO (<a href="#readback">4.5</a>): for 30 seconds if it was set
+  back and held, for as long as it did not.</li>
+  <li>With a <a href="#narrow">narrow format</a>, an amber line saying it is OpenHamShack ATV only — and, if the
+  receiver found a different format on the air, <i>Receiving … — found on the air. Transmit stays …</i>. While
+  you are not transmitting the card describes the format being received; while you transmit, the one you
+  send.</li>
+</ul>
+
+<h3>Smaller screens</h3>
+<p>The window is laid out for 1920 × 1080 and also works at 1366 × 768: the side columns narrow, the radio's name
+moves to the status strip, the channels go four to a row, and the transmit panel shows the first warning with a
+count of the rest (hover for all of them).</p>
+
+<!-- ============================================================== -->
+<h2 id="receive">6. Receiving</h2>
+
+<h3>6.1 Tuning</h3>
+<ul>
+  <li><b>Band and system</b>: pick them at the top. Changing band moves receive and transmit to the band's usual
+  frequency (70cm 437 MHz, 23cm 1255 MHz, 6cm 5665 MHz).</li>
+  <li><b>Channels</b>: click one on the band card, or its marker on the spectrum.</li>
+  <li><b>Spectrum</b>: click anywhere to tune there (rounded to 250 kHz, or the step if it is larger); the wheel
+  over the spectrum steps by the tuning step.</li>
+  <li><b>Keyboard</b>: <kbd>←</kbd> <kbd>→</kbd> one step, with <kbd>Shift</kbd> ten steps.</li>
+  <li><b>Type it</b>: click the frequency (or <kbd>Enter</kbd> when it has focus) and type <code>1255</code>,
+  <code>1311.5</code>, <code>1255.25 MHz</code> or <code>5.665 GHz</code>. A frequency in another band moves to
+  that band.</li>
+  <li><b>Step</b>: 10 kHz, 25 kHz, 100 kHz (default), 250 kHz, 500 kHz or 1 MHz. Click STEP or turn the wheel over
+  it.</li>
+</ul>
+<p>Tuning with the wheel or arrows stops at the band edge rather than leaving the band.</p>
+<figure><img src="img/crop-spectrum-am.png" alt="The receive band, AM-VSB on 1275 MHz">
+<figcaption>The receive band on an AM-VSB station: the bandplan strip and channel markers above, the vision
+carrier, the PAL chroma at +4.43 MHz and the sound carrier at +6.0 MHz marked, the occupied bandwidth shaded, and
+the waterfall below.</figcaption></figure>
+
+<h3>6.2 Reading the picture</h3>
+<p>The decoder looks for line sync, then field sync, then colour burst. The badges follow it:</p>
+<table>
+  <tr><th>What you see</th><th>What it means</th></tr>
+  <tr><td>NO SIGNAL, grain and a rolling bar</td><td>No sync found, or frames have stopped arriving. The picture
+  never freezes on an old frame: if it shows a picture, the picture is live.</td></tr>
+  <tr><td>SYNC under 100 %, FIELD not locked</td><td>A weak or noisy signal: some lines' sync is lost.</td></tr>
+  <tr><td>SYNC 100 %, FIELD LOCKED, COLOUR MONO</td><td>A good black-and-white picture: no colour burst, or the
+  sample rate is too low for colour (the "What fits" card says which).</td></tr>
+  <tr><td>COLOUR PAL</td><td>Colour decoded. The vectorscope's dots should sit on its targets for colour bars.</td></tr>
+  <tr><td>SNR</td><td>Unweighted video SNR in dB, measured on lines that carry no picture. Higher is a cleaner
+  picture.</td></tr>
+  <tr><td>JITTER</td><td>Line-timing jitter in nanoseconds: how much the line sync wanders. Lower is steadier.</td></tr>
+</table>
+<p>For AM-VSB the status strip also shows the measured <b>carrier offset</b>: how far the station's vision carrier
+is from where you are tuned. Inverted video on FM (sync upwards) is a setting both ends must agree on; see
+<a href="#systems">section 13</a>.</p>
+
+<h3>6.3 The instruments</h3>
+<p>The <b>waveform monitor</b> shows one line (100 by default) in volts: sync tip at −0.3 V, black at 0, peak
+white at 0.7 V, the colour burst just after sync. On the test card you will see the greyscale steps. The arrows
+beside LINE, or the wheel over it, move one line; with <kbd>Shift</kbd>, ten. Lines 1–312 are field 1 (F1),
+313–625 field 2 (F2).</p>
+<p>The <b>vectorscope</b> plots the decoded colour. Colour bars land on six targets — R, MG, B, CY, G, YL — and a
+picture with no colour is a dot in the middle.</p>
+
+<h3>6.4 Saving a picture</h3>
+<p>Click the camera on the picture, or press <kbd>Ctrl</kbd>+<kbd>S</kbd>. It saves what the monitor shows at 768
+× 576 as a PNG in <code>~/.local/share/openhamshack-atv/</code>, named with the time, <code>rx</code> or <code>tx</code>,
+and the frequency, e.g. <code>openhamshack-atv-20261004-175109-rx-1255.000MHz.png</code>.</p>
+
+<h3>6.5 The spectrum's look</h3>
+<p>Settings › Display chooses the waterfall palette and turns automatic floor and contrast on or off.
+<kbd>Ctrl</kbd>+<kbd>T</kbd> switches between the dark and light themes.</p>
+
+<h3 id="iq">6.6 Recording IQ, and playing it back</h3>
+<p><b>Record IQ</b>, in the header of the receive band, records the receiving radio's raw samples — exactly what the
+decoder sees, in the radio's own format (16-bit from a Pluto, 8-bit with Tezuka's 8-bit receive) — as a SigMF pair:
+a <code>.sigmf-data</code> file of samples and a small <code>.sigmf-meta</code> file that says what they are, with
+the frequency, system, settings and picture format. Click it again to stop; otherwise it stops at the time or size
+limit in Settings › Radio (60 s and 4000 MB by default), whichever comes first, and it will not start unless the
+disk has room for all of it. 10 MS/s of 8-bit IQ is 20 MB a second, 16-bit 40 MB. Recordings go in
+<code>~/.local/share/openhamshack-atv/recordings/</code>, named like
+<code>ohsatv-20261005-123843Z-fm-1251.000MHz</code>.</p>
+<p>To play one back, set Settings › Radio › Radio to <i>Recording (IQ file)</i> and choose it under
+<b>Recording to play</b>, or run <code>openhamshack-atv --play &lt;file&gt;.sigmf-meta</code>. The recording goes
+through the same receiver in real time, taking its rate, system, settings and tuning from the file, in a loop if
+you choose. Playback never transmits. A recording made on a Pluto-family radio has the radio's own filters undone
+on playback, as live receive does (<a href="#filters">section 10</a>).</p>
+
+<!-- ============================================================== -->
+<h2 id="transmit">7. Transmitting</h2>
+
+<div class="callout danger"><b class="lead">Before you transmit on a real radio</b>
+<ul>
+  <li>An SDR's transmit output is <b>not filtered</b>: it carries aliases and harmonics. Put a band-pass or
+  low-pass filter after it, and after any amplifier, before an antenna.</li>
+  <li>Check the band, the frequency and the bandwidth against your licence and the bandplan; check the power you will
+  radiate (above 10 W EIRP the licence's EMF condition applies).</li>
+  <li>The first time, transmit into a dummy load through an attenuator, and watch it on a second receiver.</li>
+</ul></div>
+
+<h3>7.1 What has to be true before PTT works</h3>
+<p>The PTT button reads <b>TRANSMIT LOCKED</b> until every one of these is satisfied, and the first reason is
+written under it (hover for the rest):</p>
+<ol>
+  <li>The licence box in Settings › Station is ticked.</li>
+  <li>A callsign is set.</li>
+  <li>For a real radio — a Pluto-family radio or a HackRF — <b>Let a real radio transmit</b> is ticked in Settings ›
+  Transmit (<a href="#hwtx">7.2</a>).</li>
+  <li>The radio is running, can transmit, and can tune this band.</li>
+  <li>The signal <b>fits the sample rate</b> (the "What fits" card says ✓).</li>
+  <li>The power is not above the ceiling.</li>
+  <li>The <b>band guard</b> allows the frequency (<a href="#guard">7.6</a>).</li>
+</ol>
+<p>On the simulator, the band guard's refusals are shown as warnings instead — <i>on a real radio this would be
+refused: …</i> — so every mode can be tried; nothing leaves the computer.</p>
+
+<h3 id="hwtx">7.2 Letting a real radio transmit</h3>
+<figure class="half"><img src="img/settings-transmit.png" alt="Settings, Transmit page">
+<figcaption>Settings › Transmit: the real-hardware switch, the power ceiling and the two timers. Only this dialog
+can change them.</figcaption></figure>
+<p><b>Let a real radio transmit. I have checked the band, the power and the antenna, and this is my licence.</b>
+It is off when the program is installed, and only the Settings dialog can turn it on. Leave it off until the radio
+is connected to what you mean it to be connected to.</p>
+
+<h3>7.3 Power</h3>
+<p>The <b>Power (TX gain)</b> slider is attenuation in the SDR: 0 dB is the radio's full output, which is a few
+milliwatts (about +2.5 dBm from a Pluto at 23cm, −3 dBm at 6cm). It starts at −30 dB. <b>Transmit gain ceiling</b>
+in Settings › Transmit (default −10 dB) is the most the slider may reach; the red notch on the slider marks it.
+Set the ceiling for your amplifier's input, so that the slider cannot overdrive it. For a HackRF the same scale
+drives its 0–47 dB transmit gain.</p>
+
+<h3>7.4 Keying, and stopping</h3>
+<table>
+  <tr><th>To</th><th>Do</th></tr>
+  <tr><td>Transmit</td><td>Click <b>PTT</b>; click again to stop. Or <b>hold</b> <kbd>Space</kbd>: releasing it
+  stops.</td></tr>
+  <tr><td>Stop at once</td><td><kbd>Esc</kbd>, or close the window.</td></tr>
+</table>
+<p>While transmitting the window has a red <b>ON AIR</b> frame, the frequency turns red, and the PTT bar shows how
+long you have been on and how long is left. If the window loses focus while you hold <kbd>Space</kbd>, transmit
+stops.</p>
+<figure class="half"><img src="img/crop-txpanel-onair.png" alt="Transmit panel while on air">
+<figcaption>On air: the outgoing card, the ident, the power, the time on air and the time left before the
+time-out.</figcaption></figure>
+
+<h3>7.5 What stops a transmission by itself</h3>
+<ul>
+  <li><b>Time-out</b> — Settings › Transmit, default 10 minutes. A notice says <i>Transmit stopped: the 10-minute
+  time-out</i>.</li>
+  <li><b>Watchdog</b> — if the window stops responding for 2 seconds (the default), the engine stops
+  transmitting.</li>
+  <li><b>A change that makes it wrong</b> — tuning to a frequency the guard refuses, while keyed, unkeys.</li>
+  <li><b>The radio moving by itself</b> — a Pluto-family radio whose transmit LO moves, or whose rate or receive LO
+  moves and will not go back, unkeys at once (<a href="#readback">4.5</a>).</li>
+</ul>
+<p>The program never transmits when it starts, after a restart or reconnection, or after Settings are saved. Only
+PTT keys it.</p>
+
+<h3 id="guard">7.6 The band guard: refusals and warnings</h3>
+<p>Every time the frequency, system or sample rate changes, the program checks the whole occupied signal — not just
+the carrier — against the UK allocation and the bandplan. Some things <b>refuse</b> transmit; others are
+<b>warnings</b>, shown in amber under PTT, because the UK's own ATV frequencies do them.</p>
+<table>
+  <tr><th>Refused</th><th>Warned</th></tr>
+  <tr><td>
+    <ul>
+      <li>Any part of the signal outside a UK amateur allocation (on 6cm, outside one of the three blocks). The
+      sentence says how far outside it would be.</li>
+      <li>On 23cm and 6cm, a carrier outside an ATV or all-mode segment of the bandplan. (70cm has no ATV
+      segment; there the allocation alone is checked.)</li>
+      <li>The 23cm TV repeater outputs, 1300–1325 MHz (receive only).</li>
+      <li>A frequency the radio cannot tune.</li>
+    </ul>
+  </td><td>
+    <ul>
+      <li>Sidebands reaching into narrowband, beacon, satellite or repeater-output segments.</li>
+      <li>On 23cm, the signal overlapping Galileo E6 (1258.29–1299.21 MHz).</li>
+      <li>On 23cm, the signal in 1250–1290 MHz, where the RSGB asks for caution (primary users).</li>
+      <li>On 70cm, <b>OUTSIDE THE BANDPLAN</b>, as a red banner (<a href="#b70">8.1</a>); and the 40 W ERP limit
+      in 430–432 MHz.</li>
+    </ul>
+  </td></tr>
+</table>
+<p>Read the warnings before you transmit. They are why the guard does not refuse 1255, 1275 and 5665 MHz: those
+are the UK's simplex ATV frequencies, and a 17.8 MHz FM-ATV signal on them does reach into neighbouring segments.</p>
+
+<h3>7.7 Your ident</h3>
+<p>Your callsign, locator and second line are drawn into every frame of every source, for the whole transmission,
+and cannot be turned off. The UK licence (condition 6(21)) requires the station to be "clearly identifiable at all
+times"; a caption in vision is the safest reading of that for television. The ident box in the transmit panel shows
+exactly what goes out; with no callsign set it reads NO CALLSIGN and transmit is refused.</p>
+
+<h3>7.8 Half duplex, and what the picture shows while keyed</h3>
+<p>On a single real radio, receive <b>pauses while you transmit</b> — the link cannot carry both directions at video
+rates — and the picture switches to the <b>TX preview</b>, labelled as such, so you never mistake what you send for
+what you receive. The spectrum shows what you are sending, in red under a <b>TX · THE SIGNAL BEING SENT · RECEIVE
+PAUSED</b> label, and the waterfall carries on with those lines in grey between red edges, so afterwards you can
+still see which rows were your own transmission. At unkey both go back to receive. The exception is a LibreSDR or
+Pluto+ whose link is fast enough for both. With a HackRF
+transmitting, the other radio keeps receiving. On the simulator, your signal comes back through the loop.</p>
+
+<h3>7.9 Split: repeaters</h3>
+<p>Turn on <b>SPLIT</b> (under the frequency) to transmit on a different frequency from receive — a repeater's
+input while you watch its output. Click the TX frequency to type it. The 23cm repeater outputs (1300–1325 MHz) are
+receive-only; the inputs at 1248 and 1249 MHz are on the band card. There are no TV repeaters in Scotland; the
+nearest are GB3KM and GB3EY.</p>
+
+<h3>7.10 The transmit log</h3>
+<p>Every key-up and unkey is written, one line each, to <code>~/.local/share/openhamshack-atv/txlog.jsonl</code>: the
+time (UTC), frequency, band, system, picture format, sample rate, radio, callsign, source and the gain actually
+used, whether the cable feed was on, the warnings that applied, and at unkey why it stopped and how long it lasted.
+A 70cm transmission is recorded with its OUTSIDE THE BANDPLAN warning.</p>
+
+<h3 id="cable">7.11 The cable feed: 405 lines into a vintage set</h3>
+<p>A 405-line television tunes only the old BBC Band I channels, B1–B5 (41–68 MHz). Band I is <b>not an amateur
+allocation</b>, so OpenHamShack ATV will send there only by cable, from the radio through an attenuator into the set's
+aerial socket, and only like this:</p>
+<ol>
+  <li>Open <b>Settings › Transmit</b>. In the red <b>Cable feed</b> box, tick the sentence first: <i>The output goes
+  by cable, through attenuation, into a receiver's aerial socket — never to an antenna.</i> Then tick <b>Cable
+  feed on</b>, and Save. Real hardware also needs <b>Let a real radio transmit</b>, as always.</li>
+  <li>The radio goes to <b>Band I</b> (now in the band selector), AM-VSB and <b>405 lines</b>, on B1. Pick the
+  channel the set is tuned to from the channel list: B1 45.00, B2 51.75, B3 56.75, B4 61.75 or B5 66.75 MHz
+  vision, the sound 3.5 MHz below each.</li>
+  <li>A red <b>CABLE FEED — NOT FOR ANTENNAS</b> banner stays at the top of the transmit panel for as long as it
+  is on. There is no power slider: every transmission uses the radio's least output (−89.75 dB on a Pluto; VGA 0
+  and the amplifier off on a HackRF).</li>
+</ol>
+<figure><img src="img/main-cable-feed-1920.png" alt="The cable feed on B2, keyed on the simulator">
+<figcaption>The cable feed on B2 (51.75 MHz), keyed on the simulator: the banner, Band I, 405 lines, and no power
+control.</figcaption></figure>
+<ul>
+  <li><b>Which radio:</b> a HackRF tunes all five channels. A Pluto on Tezuka firmware tunes from 46.875 MHz,
+  which is B2–B5 (B1's sound is at 41.5 MHz); a stock Pluto starts at 70 MHz and can send none. PTT says which
+  channels the radio can send when it cannot send the one chosen.</li>
+  <li><b>Nothing else can be sent while it is on</b> — not another format, not another frequency, not the amateur
+  bands. Turn it off in Settings to go back on the air.</li>
+  <li>It is <b>off every time the program starts</b>, and switching it on or off while transmitting stops the
+  transmission. Every transmission is in the log with <code>"cableFeed": true</code>.</li>
+  <li>How strong the least output is at 50 MHz has not been measured. Estimated from 70cm, a Pluto's is near
+  −86 dBm, which a set may find weak; start with little attenuation, and add it if the set overloads. The
+  attenuator is still the rule: it protects the set, and the air, if the radio does not do as it is told.</li>
+</ul>
+
+<h3 id="cable-uhf">7.12 The cable feed on UHF: 625 lines and teletext into a 625-line set</h3>
+<p>A UK 625-line television tunes only UHF, so with the cable feed on there is a second band, <b>UHF</b>, for
+625-line PAL (System I) with its FM sound 6 MHz above vision — and with teletext and subtitles, which a teletext
+set decodes. It is a cable feed like Band I: the same tick, the same banner, the least output, nothing else sent.</p>
+<ol>
+  <li>Turn the cable feed on in <b>Settings › Transmit</b> as above. Then choose <b>UHF</b> in the band selector:
+  the radio goes to AM-VSB, PAL, on <b>E36 (591.25 MHz vision)</b> — the old VCR channel, which a vintage set's
+  spare button is often tuned to already.</li>
+  <li>Other channels: E21–E48 except E38 (vision 8N + 303.25 MHz: E21 471.25 … E48 687.25). The band card has
+  E21, E24, E28, E32, E36, E40, E44 and E48; type any other. Channels above 48 are mobile phone bands now, and 38 is
+  radio astronomy, so they are refused.</li>
+  <li>For teletext choose <b>10 MS/s or more</b> in Settings › Radio (8 MS/s carries it with a narrower spectrum
+  that a television may not decode; 5 MS/s cannot), switch <b>Text</b> on and pick the page folder as on air.</li>
+</ol>
+<figure><img src="img/main-cable-uhf-1920.png" alt="The cable feed on UHF E36 with teletext, keyed on the simulator">
+<figcaption>UHF E36, keyed on the simulator with the sample teletext service: the banner, 625-line PAL, and the
+waveform monitor on line 12 showing the data.</figcaption></figure>
+<ul>
+  <li><b>Which radio:</b> every one tunes UHF — a stock Pluto from 325 MHz, a HackRF from 1 MHz.</li>
+  <li><b>Power:</b> a Pluto's least output is estimated at about −86 to −82 dBm here, which may give a snowy
+  picture and no teletext on a real set; a HackRF's is tens of dB more, and wants an attenuator of 30 dB or so. Try
+  it on the bench first: <code>docs/teletext-on-air-test.md</code>, part E.</li>
+  <li>Band I stays 405 lines only, and teletext is refused there.</li>
+</ul>
+
+<!-- ============================================================== -->
+<h2 id="bands">8. The bands</h2>
+<p>The band data comes from the RSGB 2026 band plan, the IARU Region 1 VHF Handbook 10.03, the Ofcom amateur
+licence (OFW611, February 2024) and the BATC wiki. Power limits are PEP for the Full licence unless stated.</p>
+
+<h3 id="b70">8.1 70cm (430–440 MHz)</h3>
+<div class="callout warn"><b class="lead">Analogue ATV is no longer in the 70cm bandplan</b>
+The RSGB removed fast-scan analogue TV from its 70cm plan on <b>4 December 2020</b>, and IARU Region 1 says that
+from 1 January 2021 "Analogue ATV and SATV is no longer permitted in the 430-440 MHz band". Only narrow DATV around
+437 MHz remains. The licence itself does not forbid analogue TV here, so OpenHamShack ATV <b>allows AM-VSB transmit on
+70cm with a warning</b> — OUTSIDE THE BANDPLAN, shown under PTT and written to the transmit log with every 70cm
+transmission — and still keeps the whole signal inside 430–440 MHz. Whether to transmit there is your decision,
+under your licence. 23cm is the place for AM-VSB inside the bandplan.</div>
+<figure class="half"><img src="img/crop-70cm-warning.png" alt="The 70cm transmit warnings">
+<figcaption>On 70cm the red banner sits under PTT, above the ordinary warnings.</figcaption></figure>
+<table>
+  <tr><th>Item</th><th>Value</th></tr>
+  <tr><td>Status</td><td>Secondary</td></tr>
+  <tr><td>Power</td><td>400 W PEP on 432–440 MHz; 40 W ERP on 430–432 MHz; 431–432 MHz not within 100 km of Charing
+  Cross</td></tr>
+  <tr><td>Segments</td><td>435–436 satellites only; 436–438 satellites and experimental DATV (QPSK up to 2
+  Msym/s)</td></tr>
+  <tr><td>Channels</td><td><b>433.0 MHz</b> — not a bandplan channel (analogue has none here): it is where an AM-VSB
+  signal with sound, −1.25 to +6.1 MHz about the vision carrier, sits wholly inside 430–440 MHz. Any vision carrier
+  from 431.25 to 433.9 MHz does. <b>435.0 MHz</b> — not a bandplan channel either, and in the satellites-only
+  segment: 405 lines, or 625 without sound up to 10 MS/s, fit; 625 with sound reaches 441.1 MHz and is warned
+  about (for a cable into an attenuator), not refused. Past 430–440 MHz is a warning on 70cm, never a refusal.
+  <b>437.0 MHz</b> — the DATV centre of activity, receive only; the band opens
+  here.</td></tr>
+  <tr><td>System</td><td>AM-VSB. On 433 MHz the signal's sidebands reach the satellite segments (435–438 MHz), and
+  the program warns about that too.</td></tr>
+  <tr><td>Radio</td><td>A stock Pluto puts out about +3.5 dBm at 432 MHz.</td></tr>
+</table>
+
+<h3>8.2 23cm (1240–1325 MHz)</h3>
+<table>
+  <tr><th>Segment (MHz)</th><th>Use</th><th>Transmit</th></tr>
+  <tr><td>1242–1249</td><td>TV repeater inputs (original ATV inputs 1248, 1249)</td><td class="yes">yes</td></tr>
+  <tr><td>1249–1260</td><td>ATV / DATV (IARU R1 1243.25–1260)</td><td class="yes">yes</td></tr>
+  <tr><td>1260–1270</td><td>Amateur satellite, Earth-to-space only</td><td class="part">sidebands warned</td></tr>
+  <tr><td>1272–1290.994</td><td>ATV / DATV (IARU R1)</td><td class="yes">yes</td></tr>
+  <tr><td>1291.494–1296</td><td>All modes</td><td class="yes">yes</td></tr>
+  <tr><td>1296–1300</td><td>Narrowband, beacons, FM/DV — not ATV</td><td class="no">no</td></tr>
+  <tr><td>1300–1325</td><td>TV repeater outputs (UK only)</td><td class="no">receive only</td></tr>
+</table>
+<p><b>Channels on the band card</b>: 1248 and 1249 (repeater inputs), <b>1255 (simplex, BATC)</b>, 1275 (simplex
+or alternative repeater input, as the CAA allows), and the repeater outputs 1308, 1310, 1311.5, 1312, 1316 and
+1318.5 (receive only).</p>
+<ul>
+  <li>Status secondary. Power 400 W PEP (Full), 100 W (Intermediate); <b>not allocated to Foundation</b>.</li>
+  <li>The RSGB: "caution must be exercised prior to using 1250-1290 MHz" because of primary users.</li>
+  <li><b>Galileo E6</b> occupies 1258.29–1299.21 MHz. A full FM-ATV signal on 1255 MHz spans about 1246–1264 MHz and
+  reaches into it; on 1275 MHz it sits in the middle of it. CEPT's ECC Decision (25)01 sets −17 dBW/MHz EIRP for ATV
+  in 1258–1300 MHz; the UK reportedly does not apply that limit. The program warns.</li>
+  <li>Both AM-VSB and FM-ATV may be sent here. FM-ATV is current UK practice.</li>
+  <li>A stock Pluto gives about +2.5 dBm at 1296 MHz: a PA is needed, and an LNA and band-pass filter are
+  recommended.</li>
+</ul>
+
+<h3>8.3 6cm (5650–5680, 5755–5765, 5820–5850 MHz)</h3>
+<p>The UK allocation is <b>three separate blocks</b>, not the whole of 5650–5850 MHz, and the whole signal must sit
+inside one of them.</p>
+<figure class="half"><img src="img/crop-band-6cm.png" alt="The 6cm band card">
+<figcaption>The 6cm band card: status, power, the radio's limits, and the channels.</figcaption></figure>
+<table>
+  <tr><th>Block (MHz)</th><th>Use</th></tr>
+  <tr><td>5650–5668</td><td>All modes (satellite Earth-to-space)</td></tr>
+  <tr><td>5668–5670</td><td>Narrowband (5668.2 alternative centre)</td></tr>
+  <tr><td>5670–5680</td><td>All modes</td></tr>
+  <tr><td>5755–5765</td><td>All modes, with narrowband and beacons at 5760–5762; users must accept ISM interference</td></tr>
+  <tr><td>5820–5850</td><td>All modes; satellite space-to-Earth above 5830; users must accept ISM interference</td></tr>
+</table>
+<ul>
+  <li><b>5665 MHz</b> is the UK ATV frequency (BATC; GB3KM's input), and the only common one where a wide FM signal
+  fits inside a block. 5825 and 5840 MHz are used for wideband FM audio and are at or near the block edges.</li>
+  <li>Power 400 W (Full), 100 W (Intermediate), 2 W (Foundation, not 5830–5850). Horizontal polarisation is the BATC
+  standard.</li>
+  <li>FM-ATV only on this band.</li>
+  <li>Ofcom: flying FPV is not compatible with the amateur licence; there is no airborne use in these bands.</li>
+  <li>A stock Pluto cannot tune here without a change; see <a href="#sixcm">section 12</a>.</li>
+</ul>
+
+<!-- ============================================================== -->
+<h2 id="sources">9. Picture and sound sources</h2>
+<figure class="half"><img src="img/crop-txpanel-idle.png" alt="The transmit panel">
+<figcaption>The transmit panel: the outgoing picture, the Picture and Sound choices, the ident, power and PTT,
+and the warnings for this frequency.</figcaption></figure>
+
+<h3>Picture</h3>
+<table>
+  <tr><th>Source</th><th>What it sends</th></tr>
+  <tr><td><b>Test card</b></td><td>A test card drawn by the program: colour bars, greyscale, frequency gratings
+  (0.8–4.8 MHz), a circle and grid, and your ident in the middle.</td></tr>
+  <tr><td><b>Bars</b></td><td>Colour bars, with your ident.</td></tr>
+  <tr><td><b>Webcam</b></td><td>A V4L2 camera, read through <code>ffmpeg</code>: <code>/dev/video0</code> by default.
+  Pick another in <b>Settings › Sources</b>, which lists every capture device it finds with the name the kernel
+  gives it and a <b>Refresh</b> button; a device no longer plugged in stays selected, marked "not connected",
+  rather than silently falling back to the default.</td></tr>
+  <tr><td><b>File…</b></td><td>A video file — anything <code>ffmpeg</code> plays (mp4, mkv, avi, mov, webm, ts,
+  mpg…). Choosing it opens a file dialog in the folder you last chose a file from (the first time,
+  <code>~/Videos</code>, or your home folder if there is none). The file's name is shown under the choice, shortened
+  to fit, with the whole path on hover. The file is sent frame by frame, with its sound if you choose that.</td></tr>
+</table>
+<p>Your ident is drawn on every source. On webcam and file pictures it goes in the corner chosen in Settings ›
+Station. A static source (test card, bars) is generated once and then repeated, so it costs almost nothing to
+send; a live source is encoded frame by frame. If a source fails while you transmit, the program says so and sends
+the test card instead. Webcam and file need the <code>ffmpeg</code> program.</p>
+
+<h3>Sound</h3>
+<table>
+  <tr><th>Source</th><th>What it sends</th></tr>
+  <tr><td><b>Tone</b></td><td>A test tone, 1 kHz by default (Settings › Audio). With NICAM on, the stereo
+  test: the tone left, twice it right.</td></tr>
+  <tr><td><b>Mic</b></td><td>The microphone chosen in Settings › Audio.</td></tr>
+  <tr><td><b>File</b></td><td>The video file's sound.</td></tr>
+  <tr><td><b>None</b></td><td>Silence.</td></tr>
+</table>
+<p>Sound needs room in the signal: at low sample rates there is none, and the "What fits" card says
+<i>no room for the sound carrier</i>.</p>
+
+<!-- ============================================================== -->
+<h2 id="limits">10. Bandwidth and radio limits</h2>
+<p>The sample rate decides what fits. This table is what the program's own plan functions compute at the default
+settings (AM-VSB System I; FM with the 6 MHz sound subcarrier):</p>
+<table>
+  <tr><th>Rate</th><th>AM-VSB</th><th>FM-ATV, IARU V.2 (7 MHz p-p)</th><th>FM-ATV, 4 MHz p-p</th>
+  <th>FM, 1.2 MHz p-p, 1.6 MHz video</th></tr>
+  <tr><td>5 MS/s</td><td class="part">2.4 MHz video, mono, no sound</td><td class="no">no (needs 11.5 MHz)</td>
+  <td class="no">no (8.5 MHz)</td><td class="part">fits: mono, no sound, 4.4 MHz wide</td></tr>
+  <tr><td>6.25 MS/s</td><td class="part">3.0 MHz video, mono, no sound</td><td class="no">no (12.6 MHz)</td>
+  <td class="no">no (9.6 MHz)</td><td class="part">fits: mono, no sound</td></tr>
+  <tr><td>8 MS/s</td><td class="part">3.8 MHz video, mono, sound</td><td class="no">no (14.2 MHz)</td>
+  <td class="no">no (11.2 MHz)</td><td class="part">fits: mono, no sound</td></tr>
+  <tr><td>10 MS/s</td><td class="yes">4.8 MHz video, colour, sound</td><td class="no">no (16.0 MHz)</td>
+  <td class="no">no (13.0 MHz)</td><td class="part">fits: mono, no sound</td></tr>
+  <tr><td>12.5 MS/s</td><td class="yes">5.5 MHz video, colour, sound</td><td class="no">no (17.0 MHz)</td>
+  <td class="no">no (14.0 MHz)</td><td class="part">fits: mono, no sound</td></tr>
+  <tr><td>16 MS/s</td><td class="yes">full System I</td><td class="no">no (17.8 MHz)</td>
+  <td class="yes">fits: 14.8 MHz, colour, sound</td><td class="part">fits: mono, sound</td></tr>
+  <tr><td>20 MS/s</td><td class="yes">full</td><td class="yes">fits: 17.8 MHz, colour, sound</td>
+  <td class="yes">fits</td><td class="part">fits: mono, sound</td></tr>
+</table>
+<ul>
+  <li>Occupied bandwidth for FM is by Carson's rule. A colour AM-VSB signal with sound occupies about 7.3 MHz.</li>
+  <li>The narrow FM column is what a USB Pluto can send at its 5 MS/s, and what the program chooses for one
+  (<a href="#profiles">4.3</a>); by hand it is Settings › FM-ATV, deviation 1.2 MHz and video bandwidth 1.6 MHz (the
+  sound subcarrier is dropped by itself where there is no room). It is not standard: a standard FM-ATV receiver will
+  show a weak, low-contrast picture.</li>
+  <li>The same deviation with 4.9 MHz of video and the 5.5 MHz sound subcarrier fits 12.5 MS/s in colour with sound
+  (11.8 MHz wide). That is what a nano with 8-bit receive is set up to receive, and what was received in colour on
+  the air from a LibreSDR.</li>
+  <li>The sample rate is per system (Settings › Radio), so AM-VSB and FM-ATV can each have their own.</li>
+</ul>
+
+<h3 id="narrow">Colour and sound at 5 MS/s: Mini-MAC and narrow colour PAL</h3>
+<p>A Pluto on USB can transmit only about 5 MS/s, which leaves room for a mono FM-ATV picture and no sound.
+Between two copies of OpenHamShack ATV there are two ways to fit colour and sound into that channel. Choose them on the
+transmit panel, <b>Format</b> (FM-ATV only):</p>
+<figure class="half"><img src="img/crop-txpanel-minimac.png" alt="The transmit panel with Mini-MAC chosen">
+<figcaption>Mini-MAC chosen: the panel says, in amber, that it is OpenHamShack ATV only.</figcaption></figure>
+<table>
+  <tr><th>Format</th><th>What it is</th><th>Measured in the simulator at 5 MS/s</th></tr>
+  <tr><td><b>PAL</b></td><td>The standard. At 5 MS/s: a mono picture, no sound.</td><td>Locks down to about 12 dB
+  carrier-to-noise.</td></tr>
+  <tr><td><b>Mini-MAC</b></td><td>Each line sends a burst of data (line sync and a digital sound sample), then the
+  colour, then the brightness, one after another, each squeezed in time — after the MAC system of 1980s
+  satellite TV. Sound is digital, about 7 kHz wide.</td><td>Locks and shows colour down to about 4 dB; the
+  picture is clean to about 8 dB and the sound clear to about 6 dB. Recovers from a break in the signal within a
+  few lines.</td></tr>
+  <tr><td><b>Low-PAL</b> (narrow colour PAL)</td><td>PAL colour moved down to a 1.6 MHz subcarrier, with the
+  brightness limited to 1.1 MHz and an FM sound subcarrier at 2.2 MHz.</td><td>Picture, colour and sound all
+  hold down to about 12 dB — the same as the mono picture.</td></tr>
+</table>
+<ul>
+  <li><b>Neither is a standard.</b> Only another OpenHamShack ATV decodes them; an ordinary FM-ATV receiver shows
+  nothing useful. The window says so wherever one is chosen.</li>
+  <li>The receiver finds them by itself: with <b>Recognise the picture format on receive</b> on (Settings ›
+  FM-ATV, the default), when nothing has been decoded for a second it looks at what is on the air and switches to
+  PAL, Low-PAL or Mini-MAC to match, with a notice. A picture shown without colour is checked again every
+  second (a PAL receiver locks to Low-PAL's sync pulses and shows it in black and white); it switches after about
+  three seconds of agreeing looks, and never moves a picture that really is PAL. What you transmit does not
+  change.</li>
+  <li>They are defined in time, not sample rate: a Pluto sending at 5 MS/s is received by a radio at 6.25 or 16
+  MS/s with the same FM settings.</li>
+  <li>A third idea, digital sound inside the sync pulses of the mono picture, was tried and left out: its sound
+  failed about 8 dB before its picture.</li>
+</ul>
+<h4>On the air</h4>
+<p>Both have been sent from the Pluto nano at 5 MS/s on 1253 MHz, at about −10 dBm, and received by a LibreSDR at
+16 MS/s across the bench (4 and 5 October 2026). The receiver found each format by itself within about 3
+seconds.</p>
+<table>
+  <tr><th>Format</th><th>Picture</th><th>Colour</th><th>Sound</th></tr>
+  <tr><td><b>Mini-MAC</b></td><td>Field lock throughout; SNR about 30 dB, jitter about 20 ns — the steadiest
+  picture the nano has sent</td><td class="yes">throughout, hue right</td><td class="yes">digital, 39 dB SINAD;
+  28 s of sound in 28 s</td></tr>
+  <tr><td><b>Low-PAL</b></td><td>SNR about 17 dB, timing noisier (jitter about 170 ns)</td><td class="part">the
+  more faithful colour, but locked in about three-quarters of the time</td><td class="yes">about 22 dB
+  SINAD</td></tr>
+</table>
+<p>Low-PAL's 2.2 MHz sound subcarrier, near the edge of what the radio passes at 5 MS/s, came through inside the
+channel, with nothing measurable outside it that rose with transmit power. Mini-MAC's sound was poor at first (a
+median of about 17 dB); the fault was the receiver falling behind and throwing away whole blocks of signal, and
+since it skips building pictures instead, the sound is complete.</p>
+<figure><img src="img/hardware-23cm-minimac-sound-nano-to-libre-minus14.png" alt="Mini-MAC received off the air">
+<figcaption>Off the air on 5 October 2026: Mini-MAC from the nano, found by the LibreSDR's receiver by itself.
+COLOUR reads MAC, the card says what is being received and that transmit stays PAL, and Record IQ is
+running.</figcaption></figure>
+
+<h3 id="filters">The radio's own filters, undone</h3>
+<p>Getting FM colour through on the air (5 October 2026, LibreSDR to nano at 12.5 MS/s) turned up two filters in
+the way:</p>
+<ul>
+  <li><b>A filter another program had left behind.</b> The LibreSDR still had a DATV program's FIR filter loaded,
+  and it stripped the colour and sound from the transmission altogether. The driver now bypasses an FIR it finds
+  enabled when it opens the radio, and turns it back on when it closes it.</li>
+  <li><b>The chip's own fixed filters.</b> With that filter out of the path, colour came through, but the colour
+  burst arrived at 0.73 of what was sent and the sound subcarrier 7–10 dB down. Every AD936x passes its samples
+  through a chain of half-band filters that the RF bandwidth setting does not touch, and the last of them is 6 dB
+  down at half the sample rate by design. So the top of every channel is cut: at 12.5 MS/s, transmitter and receiver together take about 2.3 dB
+  off the 4.43 MHz colour and 7.8 dB off a 5.5 MHz sound subcarrier, and the same fractions of the sample rate
+  apply at every rate.</li>
+</ul>
+<p>OpenHamShack ATV now models that response from Analog Devices' own filter coefficients — the model matches both
+test radios' noise floors — and each radio undoes its own share, up to 6 dB, inside filters the receiver and
+transmitter already run, so it costs no processing. On the air with 0.1.7 the colour burst came in at 0.90 of
+what was sent (from 0.73), with the picture's SNR and the sound unharmed (46.9 dB SINAD). The receiving half
+recovered exactly what the model predicted; the transmitting half recovered less, because that LibreSDR's
+transmitter is about 1 dB worse than its model.</p>
+<figure><img src="img/hardware-23cm-fm-colour-libre-to-nano-minus14.png" alt="FM-ATV colour received off the air">
+<figcaption>FM-ATV in colour with sound off the air, LibreSDR to nano at 12.5 MS/s on 1251 MHz, once the
+leftover FIR was out of the path (5 October 2026, before the half-band correction).</figcaption></figure>
+<ul>
+  <li>Each radio undoes only its own filters: a Pluto receiving a HackRF recovers its own share and no more. With
+  someone else's FIR still running, no correction is applied.</li>
+  <li>IQ recordings stay as the radio delivered them; playback of one made on a Pluto-family radio applies the
+  receive correction (<a href="#iq">6.6</a>).</li>
+  <li>Boosting the top of the channel raises the transmitter's images out there by the same amount — at 12.5 MS/s
+  the sound subcarrier's, 7 MHz out, from about −42 to −39 dBc. No radio is steered to transmit at 12.5 MS/s, but
+  it is one more reason for the filter after the radio (<a href="#transmit">section 7</a>).</li>
+  <li>Still unexplained: the upper sideband arrives 2–3 dB weaker than the lower. Swapping the radios' roles did
+  not move it to one radio; it is most likely the antennas or the bench path.</li>
+</ul>
+
+<h3>When the computer or the link cannot keep up</h3>
+<ul>
+  <li>A rate above what the link is reported to sustain is marked in Settings and on the "What fits" card. If
+  samples are actually dropped, the card says <i>Samples are being dropped: the link cannot keep up with this
+  rate.</i></li>
+  <li><b>skipped</b> in the status strip counts frames the decoder dropped to keep up. Measured on a Ryzen 9 6900HX,
+  FM-ATV receive at 20 MS/s uses about 1.7 cores at a full 25 frames a second; a live video file looped back through
+  the simulator at 20 MS/s drops the monitor to about 17 frames a second (the transmitter keeps time). On the test
+  laptop, an i5-1135G7, an off-air AM-VSB colour recording at 10 MS/s plays with the window open at 24 frames a
+  second with nothing skipped; the hardest case, Mini-MAC received at 16 MS/s, skips a picture about every ten
+  seconds without losing any sound. A Raspberry Pi has not been measured.</li>
+  <li>When the computer falls behind the radio, whole 40 ms frames are skipped so the picture keeps its line and
+  field timing; the "What fits" card says so for ten seconds after each.</li>
+</ul>
+
+<h3 id="a405">405 lines (System A)</h3>
+<p>On AM-VSB the transmit panel's <b>Format</b> offers <b>625 PAL</b> or <b>405 lines</b>: the British
+405-line system of 1936–1985 (CCIR System A), the way the BBC sent it — positive modulation (the sync pulses at no
+carrier, white at full), a 3 MHz black-and-white picture, and AM sound 3.5 MHz <i>below</i> the vision carrier.
+It is a standard: a vintage 405-line set receives it, and so does another OpenHamShack ATV.</p>
+<figure><img src="img/main-405-transmitting-1920.png" alt="405 lines keyed on the simulator at 5 MS/s">
+<figcaption>405 lines from a USB Pluto's 5 MS/s, keyed on the simulator: the whole 4.3 MHz signal, sound included,
+inside the band.</figcaption></figure>
+<ul>
+  <li><b>It fits a USB Pluto whole.</b> The picture's sideband lies between the sound and vision carriers, so the
+  whole signal is 4.3 MHz wide — at 5 MS/s, the rate a USB Pluto can transmit, you send the full 3 MHz picture
+  and its sound. The "What fits" card shows 405 MONO and −3.5 AM.</li>
+  <li><b>The receiver recognises it.</b> With <b>Recognise the picture format on receive</b> on, a receiver set for
+  625 lines that finds 405 on the air (or the other way round) switches by itself, with a notice; what you transmit
+  does not change. The simulator has a 405-line station on 1287.5 MHz to try it on.</li>
+  <li><b>Measured in the simulator</b> (test card, 1 kHz tone): the picture holds lock down to about 14 dB
+  carrier-to-noise at 5 MS/s (10 dB at 10 MS/s), is clean from about 16 dB, and the sound is clear from about 10
+  dB — the same as a 625-line mono picture at that rate, which has no sound at all.</li>
+  <li>The test card has its own gratings for 405 lines: 0.6 to 3 MHz.</li>
+</ul>
+<figure><img src="img/main-405-1287-1920.png" alt="The simulator's 405-line station, found by the receiver">
+<figcaption>The receiver set for 625 lines, tuned to the simulator's 405-line station: it found 405 lines by
+itself, and the card says what it is receiving and that transmit stays PAL.</figcaption></figure>
+
+<!-- ============================================================== -->
+<h2 id="hackrf">11. Transmitting with a HackRF</h2>
+<p>A HackRF One carries 8-bit samples at up to 20 MS/s over USB 2, so it can send <b>standard FM-ATV</b> and colour
+AM-VSB with sound from a USB device, which a USB Pluto cannot. OpenHamShack ATV uses it <b>for transmit only</b>, beside
+the radio that receives — a Pluto, a LibreSDR, or the simulator.</p>
+<h3>Setting it up</h3>
+<ol>
+  <li>Install <code>libhackrf0</code> (recommended by the package, so normally already there). <code>hackrf_info</code>,
+  from the <code>hackrf</code> package, is a quick check that the system sees it.</li>
+  <li>Settings › Radio › <b>Transmitter</b>: choose <b>HackRF One (transmit only)</b>. Fill in the serial number if
+  you have more than one.</li>
+  <li>Settings › Transmit: tick <b>Let a real radio transmit</b> — a HackRF is real hardware, even when the receiver
+  is the simulator.</li>
+</ol>
+<h3>How it behaves</h3>
+<ul>
+  <li><b>Split operation is full duplex</b>: two radios, so receive carries on while you transmit.</li>
+  <li>The HackRF tunes 1 MHz–6 GHz at 2–20 MS/s; the receiving radio runs at the same sample rate.</li>
+  <li><b>Power</b>: the power slider maps onto the HackRF's 0–47 dB transmit gain. Its 14 dB RF amplifier is a
+  separate switch in Settings, off by default. Output falls with frequency and is low at 5.8 GHz: an external PA is
+  needed there. A HackRF needs a filter after it, like any SDR.</li>
+  <li>It is quiet until you key: gain is raised only once samples are flowing, and unkeying cuts the gain at once
+  even if the USB stream has stalled.</li>
+  <li><b>Underruns</b>: if the computer falls behind, the HackRF sends a gap, and the far end sees a break in the
+  picture. These are counted and shown on the "What fits" card: <i>HackRF underruns: n — the computer is not keeping
+  up</i>. They are never hidden.</li>
+  <li><b>Receiving at the same rate</b>: if the receiver is a USB Pluto, it cannot carry 20 MS/s and will drop
+  samples while receiving, and the window says so. Full-width receive needs a LibreSDR or Pluto+ on Ethernet.</li>
+</ul>
+<p>The device chip at the top shows <i>TX HackRF · receive …</i> when this is in use.</p>
+
+<!-- ============================================================== -->
+<h2 id="sixcm">12. 6cm on a Pluto</h2>
+<p>A stock ADALM-Pluto uses the AD9363 transceiver, which tunes <b>325–3800 MHz</b>. 6cm (5650–5850 MHz) is outside
+that. When the radio cannot reach a band, the band button is greyed and says why; tuning there is refused with the
+same sentence.</p>
+<h3>Reaching 6cm</h3>
+<ul>
+  <li><b>An AD9361 or AD9364 board</b> — such as the LibreSDR — tunes 70–6000 MHz as it is.</li>
+  <li><b>A Pluto set to AD9364 mode.</b> In a shell on the Pluto (<code>ssh root@192.168.2.1</code>):
+  <pre><code>fw_setenv attr_name compatible
+fw_setenv attr_val ad9364
+fw_setenv compatible ad9364     # firmware 0.32 and later only
+reboot</code></pre>
+  Afterwards the Pluto tunes 70–6000 MHz. Analog Devices do not guarantee the AD9363's performance outside its
+  range, and units vary. This changes your radio's settings; it is your decision.</li>
+</ul>
+<p>OpenHamShack ATV reads what the radio can tune when it opens it — the radio's own reported range, then the driver's
+model, then a test tune — and says <i>This radio tunes 70–6000 MHz</i> in Settings › Radio.</p>
+<h3>Low output, deaf receiver: PA and LNA</h3>
+<ul>
+  <li>Output at 5760 MHz is about <b>−3 dBm</b> (K0SM's measurement on a Pluto). To reach even 1 W you need more
+  than 33 dB of amplification.</li>
+  <li>The receiver's noise figure there is about <b>10 dB</b>. An LNA in front (with a band-pass filter) makes the
+  difference between hearing nothing and a usable station.</li>
+  <li>In practice, an <b>external PA and LNA</b> are needed on 6cm. The band card says so.</li>
+</ul>
+
+<!-- ============================================================== -->
+<h2 id="systems">13. AM-VSB and FM-ATV settings</h2>
+<p>These must match the station at the other end. The defaults are the UK and IARU standards.</p>
+<h3>Settings › AM-VSB</h3>
+<table>
+  <tr><th>Setting</th><th>Default</th><th>Range and meaning</th></tr>
+  <tr><td>Video bandwidth</td><td>5.5 MHz</td><td>2–5.5 MHz (System I: 5.5)</td></tr>
+  <tr><td>Vestigial lower sideband</td><td>1.25 MHz</td><td>0.75–1.25 MHz (System I 1.25, System G 0.75)</td></tr>
+  <tr><td>Sound carrier</td><td>5.9996 MHz</td><td>above vision: 5.9996 MHz (UK System I), 5.5 MHz (System G), 6.5
+  MHz, or none</td></tr>
+  <tr><td>Sound level</td><td>−13 dB</td><td>−30 to −6 dB below peak vision (UK: 20:1 power)</td></tr>
+</table>
+<p>These are the 625-line settings. <b>405 lines</b> (Transmit › Format) use System A's own figures, which are
+fixed: 3 MHz picture, 0.75 MHz vestige above vision, AM sound 3.5 MHz below it at a quarter of vision's power
+(see <a href="#a405">405 lines</a>).</p>
+<h3>Settings › FM-ATV</h3>
+<figure class="half"><img src="img/settings-fm.png" alt="Settings, FM-ATV page">
+<figcaption>Settings › FM-ATV at the IARU V.2 defaults.</figcaption></figure>
+<table>
+  <tr><th>Setting</th><th>Default</th><th>Range and meaning</th></tr>
+  <tr><td>Deviation (peak to peak)</td><td>7.0 MHz</td><td>0.5–12 MHz, sync tip to peak white, at the pre-emphasis
+  cross-over. IARU V.2's "3.5 MHz peak" is 7 MHz here.</td></tr>
+  <tr><td>Video bandwidth</td><td>5.0 MHz</td><td>1–5.5 MHz (a USB Pluto's narrow profile uses 1.6)</td></tr>
+  <tr><td>Pre-emphasis (CCIR F.405)</td><td>on</td><td>Both ends must agree.</td></tr>
+  <tr><td>Sound subcarrier</td><td>6.0 MHz</td><td>None, 5.5 MHz (IARU V.2), 6.0 MHz (UK amateur norm), 6.5 MHz (FPV's
+  second channel)</td></tr>
+  <tr><td>Subcarrier index</td><td>0.07</td><td>0.01–0.3: how hard the subcarrier deviates the carrier</td></tr>
+  <tr><td>Invert video</td><td>off</td><td>Sync high instead of low. Both ends must agree.</td></tr>
+  <tr><td>Recognise the picture format on receive</td><td>on</td><td>Switch the receiver to PAL, Low-PAL or
+  Mini-MAC to match what is on the air (<a href="#narrow">section 10</a>). Mini-MAC always runs without
+  pre-emphasis.</td></tr>
+</table>
+<p>Lowering the deviation narrows the signal (see <a href="#limits">section 10</a>), but a receiver set for 7 MHz
+will show a faint picture.</p>
+
+<!-- ============================================================== -->
+<h2 id="extras">14. NICAM stereo</h2>
+<p>With standard PAL the program can send, and always receives, <b>NICAM-728 digital stereo sound</b>, as UK
+television added to its picture. It is switched on under <b>Transmit › Stereo</b>. It does not replace
+anything: the analogue sound carries on beside it, with the two channels mixed.</p>
+
+<h3>14.1 Where it fits</h3>
+<table>
+  <tr><th>AM-VSB</th><td>10 MS/s and up. The vision carrier is moved a little further from the middle of the
+  band to make room; the "What fits" card shows the new layout.</td></tr>
+  <tr><th>FM-ATV</th><td>16 MS/s at 3.2 MHz p-p or less; 20 MS/s at the IARU's 7 MHz p-p. Not with the 6.5 MHz
+  sound subcarrier, which sits on NICAM's 6.19–6.92 MHz: choose 6.0.</td></tr>
+</table>
+<p>Where the rate has no room, the switch stays on but nothing extra is sent, and the transmit panel says why
+in amber. Not with 405 lines, nor with the narrow formats (Mini-MAC, narrow colour PAL).</p>
+
+<h3>14.2 What is sent and heard</h3>
+<p>The signal is System I's, from ETSI EN 300 163: 728 kbit/s of DQPSK 6.552 MHz above the vision carrier,
+32 kHz 14-bit sound companded to 10 bits, J.17 pre-emphasis. On AM-VSB it is 20 dB below the vision
+carrier, as broadcast; on FM-ATV (which has no NICAM standard) its subcarrier deviates the carrier about as
+much as the sound subcarrier does.</p>
+<p>What goes out depends on the Sound choice: with <b>Tone</b>, the stereo test - the tone on the left and twice
+its frequency on the right (1 and 2 kHz), so you can tell the channels apart; with <b>File</b>, the file's own
+two channels; with <b>Mic</b>, the microphone on both.</p>
+<p>Receiving is automatic: wherever the receive band can hold NICAM the program listens for it, and plays it
+in stereo while it is cleaner than the analogue sound. The <b>NICAM</b> badge at the top says what you are
+hearing:</p>
+<table>
+  <tr><th>Badge</th><th>Means</th></tr>
+  <tr><td><b>STEREO</b> (green)</td><td>NICAM stereo is being played. The caption shows its estimated bit-error
+  rate, e.g. <i>NICAM 3E-6</i>.</td></tr>
+  <tr><td><b>MONO</b> / <b>DUAL</b></td><td>A NICAM mono or dual-language transmission: the first channel is
+  played.</td></tr>
+  <tr><td><b>FM</b> (amber)</td><td>NICAM is there but too damaged (error rate over 1 in 1000): the analogue
+  sound has taken over, as a television does.</td></tr>
+  <tr><td><b>—</b></td><td>No NICAM on this signal, or the band cannot hold it.</td></tr>
+</table>
+<p>How far it reaches: on AM-VSB NICAM lasts about as long as the picture (error-free to 20 dB CNR, failing
+near 12, where the picture is grainy but locked). On FM-ATV it needs a good signal - about 20 dB CNR -
+long after which the picture and the analogue sound still work; the program switches to the analogue sound
+by itself.</p>
+<figure><img src="img/main-nicam-1920.png" alt="The main window receiving NICAM stereo from the simulated AM-VSB station">
+<figcaption>The simulator's AM-VSB station on 1275 MHz: the NICAM badge says STEREO and the spectrum marks
+NICAM beside the sound carrier.</figcaption></figure>
+<p>The simulator's own PAL stations send NICAM, so it can be tried without a radio (Settings › Simulator,
+"NICAM stereo from the stations").</p>
+
+<!-- ============================================================== -->
+<h2 id="trouble">15. Troubleshooting</h2>
+<p>Most problems are reported in a sentence: under PTT, on the band card, on the "What fits" card, in the status
+strip, or as a notice at the top of the window. The table gives the common ones.</p>
+<table>
+  <tr><th>You see</th><th>Do this</th></tr>
+  <tr><td><i>Acknowledge the licence conditions in Settings first</i></td><td>Settings › Station: tick the licence
+  box.</td></tr>
+  <tr><td><i>Set your callsign in Settings</i></td><td>Settings › Station: enter it.</td></tr>
+  <tr><td><i>Transmit on real hardware is off: enable it in Settings › Transmit</i></td><td>Only when you mean to
+  transmit from a real radio: <a href="#hwtx">7.2</a>.</td></tr>
+  <tr><td><i>The signal does not fit this sample rate</i></td><td>Raise the rate (Settings › Radio), or narrow the
+  signal (FM deviation, video bandwidth, sound); see <a href="#limits">section 10</a>.</td></tr>
+  <tr><td><i>Transmit gain is above the ceiling</i></td><td>Lower the power slider, or raise the ceiling in Settings
+  › Transmit.</td></tr>
+  <tr><td><i>… would extend … MHz outside the UK allocation</i></td><td>Move the carrier inwards; the sentence says
+  between which frequencies it must be for this signal.</td></tr>
+  <tr><td><i>Pluto support needs the libiio Python bindings</i></td><td><code>sudo apt install python3-libiio</code></td></tr>
+  <tr><td><i>No Pluto at ip:…</i></td><td>Check the cable and the address. <b>Find</b> in Settings › Radio, or
+  <code>iio_info -s</code>, lists what is reachable. A LibreSDR or Pluto+ on Ethernet has its own address.</td></tr>
+  <tr><td>A <code>usb:</code> address fails with a permissions error</td><td>Use <code>ip:192.168.2.1</code>, which
+  needs no USB permissions (at a slightly lower rate).</td></tr>
+  <tr><td><i>This radio tunes 325–3800 MHz (an AD9363…)</i> on 6cm</td><td><a href="#sixcm">Section 12</a>.</td></tr>
+  <tr><td><i>The radio refused … MS/s</i></td><td>Choose another sample rate.</td></tr>
+  <tr><td><i>This link is reported to sustain … MS/s</i> / <i>Samples are being dropped</i></td><td>Use a lower rate,
+  the <code>usb:</code> address instead of the network one, an Ethernet radio, or a HackRF to transmit.</td></tr>
+  <tr><td><i>The HackRF needs libhackrf</i></td><td><code>sudo apt install libhackrf0</code></td></tr>
+  <tr><td><i>No HackRF found</i></td><td>Plug it in; check that <code>hackrf_info</code> sees it.</td></tr>
+  <tr><td><i>HackRF underruns</i></td><td>The computer is not keeping up: close other programs, use a static source
+  (test card), or a lower rate.</td></tr>
+  <tr><td>NO SIGNAL on a real station</td><td>Check the system (AM-VSB or FM-ATV), the frequency (the vision
+  carrier for AM), and for FM the deviation, pre-emphasis and video polarity. Lower the step and tune around; watch
+  the spectrum for the carrier.</td></tr>
+  <tr><td>Picture locked but no colour</td><td>The sample rate is too low for colour (see "What fits"), or the
+  signal is weak.</td></tr>
+  <tr><td><b>skipped</b> rising in the status strip</td><td>The computer is not keeping up with the decoder: a
+  lower sample rate, or fewer other programs.</td></tr>
+  <tr><td><i>This computer is not keeping up with … MS/s: … s of signal skipped</i></td><td>The same, one step
+  worse: whole frames of signal were skipped. A lower rate, or fewer programs running.</td></tr>
+  <tr><td><i>The radio will not hold its …</i>, or <i>The radio's … moved from … to … by itself</i></td><td>Something
+  else is setting the radio — Tezuka's own control script can. Close whatever else talks to it and start again
+  (<a href="#readback">4.5</a>).</td></tr>
+  <tr><td><i>… its 8-bit receive did not answer as packed I/Q, checked twice: receiving 16-bit</i></td><td>Close the
+  program and start it again; opening the radio again has found the 8-bit receive before.</td></tr>
+  <tr><td>FM colour pale or nearly mono with version 0.1.6</td><td>0.1.6's decoder lost colour saturation with the
+  line timing (0.63 of it on an off-air recording). Fixed in 0.1.7.</td></tr>
+  <tr><td><i>No webcam at /dev/video0</i> / <i>Choose a video file</i></td><td>Check the camera is plugged in (or
+  set <code>webcam</code> in the settings file, <a href="#files">section 16</a>), or pick the file again with File….
+  Both need <code>ffmpeg</code>.</td></tr>
+  <tr><td><i>No audio: install python3-pyaudio</i></td><td><code>sudo apt install python3-pyaudio</code>; until then
+  the program runs silent.</td></tr>
+  <tr><td>The window does not open: <i>The window needs PyQt6</i></td><td><code>sudo apt install python3-pyqt6</code>.
+  The engine alone runs with <code>openhamshack-atv --headless</code>.</td></tr>
+</table>
+
+<!-- ============================================================== -->
+<h2 id="keys">16. Keyboard shortcuts</h2>
+<p>Press <kbd>?</kbd> in the window for this list.</p>
+<figure><img src="img/shortcuts-1920.png" alt="The keyboard shortcuts overlay">
+<figcaption>The shortcuts overlay; any key closes it.</figcaption></figure>
+<table>
+  <tr><th>Key</th><th>Does</th></tr>
+  <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Tune down or up one step</td></tr>
+  <tr><td><kbd>Shift</kbd>+<kbd>←</kbd> <kbd>→</kbd></td><td>Ten steps</td></tr>
+  <tr><td>Wheel</td><td>One step; over a digit of the frequency, that digit; over STEP, change the step</td></tr>
+  <tr><td>Click the frequency</td><td>Type a frequency (<kbd>Enter</kbd> sets it, <kbd>Esc</kbd> cancels)</td></tr>
+  <tr><td>Click a channel</td><td>Tune to it</td></tr>
+  <tr><td><kbd>Space</kbd> (hold)</td><td>Transmit while held; releasing it stops</td></tr>
+  <tr><td><kbd>Esc</kbd></td><td>Stop transmitting now</td></tr>
+  <tr><td><kbd>P</kbd></td><td>Received picture / TX preview</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>Save the picture as PNG</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>,</kbd></td><td>Settings</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>T</kbd></td><td>Light / dark theme</td></tr>
+  <tr><td><kbd>F11</kbd></td><td>Full screen</td></tr>
+  <tr><td><kbd>Ctrl</kbd>+<kbd>Q</kbd></td><td>Quit (stops any transmission first)</td></tr>
+  <tr><td><kbd>?</kbd></td><td>The shortcuts list</td></tr>
+</table>
+<p><kbd>Space</kbd> and the arrow keys do nothing while you are typing in a text field.</p>
+
+<!-- ============================================================== -->
+<h2 id="files">17. Files and the command line</h2>
+<table>
+  <tr><th>What</th><th>Where</th></tr>
+  <tr><td>Settings</td><td><code>~/.config/openhamshack-atv/config.json</code> (or <code>$OHSATV_CONF</code>)</td></tr>
+  <tr><td>Window preferences (theme, palette, size)</td><td><code>~/.config/openhamshack-atv/ui.json</code></td></tr>
+  <tr><td>Snapshots and the transmit log</td><td><code>~/.local/share/openhamshack-atv/</code> (or
+  <code>$OHSATV_DATA</code>)</td></tr>
+  <tr><td>IQ recordings</td><td><code>~/.local/share/openhamshack-atv/recordings/</code>, unless Settings › Radio
+  names another folder</td></tr>
+</table>
+<p>The program is <code>openhamshack-atv</code>; the same options work as <code>python3 -m ohsatv</code> from a source
+checkout.</p>
+<pre><code>openhamshack-atv                          the window
+openhamshack-atv --headless               the engine alone, a status line a second (never transmits)
+openhamshack-atv --headless --seconds 10  ... for ten seconds
+openhamshack-atv --device sim|pluto|file  use this radio for this run only
+openhamshack-atv --play FILE.sigmf-meta   play an IQ recording through the receiver (never transmits)
+openhamshack-atv --band 23cm --system fm  start on this band and system
+openhamshack-atv --no-audio               run without a sound card</code></pre>
+<p>Options that override the settings for a run are not saved.</p>
+
+<p style="margin-top:40px; color:var(--dim); font-size:14px">OpenHamShack ATV {{VERSION}} — GM4BRI. Licence:
+GPL-3.0-or-later. Bandplan facts: RSGB 2026 band plan; IARU Region 1 VHF Handbook 10.03; Ofcom licence conditions
+OFW611; BATC wiki. Pluto measurements: Analog Devices; K0SM. Not affiliated with the RSGB, BATC, Analog Devices or
+Great Scott Gadgets.</p>
+
+</main>
+</body>
+</html>

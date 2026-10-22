@@ -1,0 +1,149 @@
+OpenHamShack ATV for Windows - what else is in this folder
+=====================================================
+
+OpenHamShack ATV is free software under the GNU General Public License,
+version 3 or later (LICENSE, beside this file). Its Windows build also
+carries the following, each under its own licence (the texts are in
+licences/, beside this file, under the names given below). Nothing here
+has been modified.
+
+Source code: OpenHamShack ATV's own complete source is published for every
+release that has a Windows installer, as openhamshack-atv-<version>-src.tar.gz,
+and the exact source release of every GPL, LGPL and MPL component below -
+the one each binary was built from - beside it, on the OpenHamShack projects'
+source site, in this program's section:
+    https://source.brian-henderson.co.uk/#openhamshack-atv
+It says which tarball is the source of which files here, and its
+SHA256SUMS checks them. The upstream addresses below are where each was
+taken from; the copies on the source site stay up for as long as an
+installer that carries them is offered.
+
+Python 3.13.16 (Python Software Foundation License;
+licences/python-LICENSE.txt)
+    The interpreter and standard library, frozen by PyInstaller.
+    https://www.python.org/
+
+PyInstaller 6.22.3 bootloader (GPL-2.0-or-later with the bootloader
+exception; licences/pyinstaller-COPYING.txt)
+    https://pyinstaller.org/
+
+NumPy 2.5.3 (BSD-3-Clause, and for parts it includes 0BSD, MIT, Zlib and
+CC0-1.0; licences/numpy-*, the main text being licences/numpy-LICENSE.txt)
+    https://numpy.org/
+
+Qt 6.11.2 and PyQt6 6.11.0 (Qt: LGPL-3.0, licences/PyQt6-Qt6-LICENSE;
+PyQt6: GPL-3.0, licences/PyQt6-LICENSE; its sip module PyQt6-sip 13.13.0:
+BSD-2-Clause, licences/PyQt6_sip-LICENSE)
+    PyQt6\Qt6: Qt's Core, Gui, Network, Widgets and Svg libraries, their
+    plugins and translations, as Riverbank's PyQt6-Qt6 6.11.2 wheel ships
+    them (Qt PDF is left out). Source on the source site: qtbase, qtsvg,
+    qtimageformats and qttranslations 6.11.2, and pyqt6-6.11.0.tar.gz.
+    https://www.qt.io/  https://www.riverbankcomputing.com/software/pyqt/
+
+PyAudio 0.2.14 (MIT; licences/PyAudio-LICENSE.txt) and the PortAudio
+library it carries (MIT)
+    https://people.csail.mit.edu/hubert/pyaudio/  https://www.portaudio.com/
+
+Paramiko 3.5.1 (LGPL-2.1; licences/paramiko-LICENSE), and what else it
+needs: cryptography 50.0.2 (Apache-2.0 or BSD-3-Clause;
+licences/cryptography-*), the cffi 2.1.1 module it loads (MIT-0;
+licences/cffi-LICENSE), bcrypt 5.0.0 (Apache-2.0; licences/bcrypt-LICENSE)
+and PyNaCl 1.6.2 (Apache-2.0, with libsodium's ISC licence;
+licences/PyNaCl-*)
+    The SSH client the radio lock uses to put its marker on a Pluto or
+    LibreSDR, so that OpenHamShack programs on other computers see it.
+    https://www.paramiko.org/  https://cryptography.io/
+    https://github.com/pyca/bcrypt  https://github.com/pyca/pynacl
+
+Pillow 12.3.0 (MIT-CMU; licences/pillow-LICENSE) - PIL/
+    The imaging library the Teletext editor uses to import pictures,
+    export pages as PNG and copy them as pictures. Its wheel carries the
+    image libraries it was built with, linked into its own modules
+    (libjpeg-turbo, libpng, zlib, libtiff, libwebp, OpenJPEG, Little CMS,
+    FreeType, HarfBuzz, Brotli and others); licences/pillow-LICENSE is
+    Pillow's licence followed by each of theirs, as Pillow ships it.
+    https://python-pillow.org/
+
+libiio 0.26 - iio.py and libiio/libiio.dll
+    (LGPL-2.1-or-later; licences/libiio-COPYING.txt)
+    Analog Devices' pure-Python bindings and the library they load, both
+    unmodified from ADI's libiio 0.26 Windows release (Windows.zip,
+    Windows-VS-2022-x64\). Only the library is here, not ADI's iio_*
+    command-line tools. Source:
+    https://github.com/analogdevicesinc/libiio/releases/tag/v0.26
+    libiio.dll is loaded at run time from its own folder and may be
+    replaced with your own build of libiio 0.26 there.
+
+    The three libraries libiio.dll is linked against, from the same ADI
+    release, unmodified, in the same folder:
+
+    libxml2 2.9.12 - libxml2.dll (MIT; licences/libxml2-Copyright)
+        https://gitlab.gnome.org/GNOME/libxml2 (tag v2.9.12)
+    libusb 1.0.24 - libusb-1.0.dll (LGPL-2.1-or-later; licences/libusb-COPYING)
+        https://github.com/libusb/libusb/releases/tag/v1.0.24
+    libserialport 0.1.1 - libserialport-0.dll (LGPL-3.0-or-later;
+        licences/libserialport-COPYING, which builds on the GPL-3.0 in
+        LICENSE beside this file)
+        https://sigrok.org/wiki/Libserialport (tag libserialport-0.1.1)
+
+PlutoSDR-M2k USB drivers v0.9 - run by the installer, not installed here
+    (Analog Devices' licence; licences/plutosdr-m2k-drivers-LICENSE)
+    The setup program carries ADI's PlutoSDR-M2k-USB-Drivers.exe v0.9
+    unmodified and runs it when "Install the PlutoSDR USB drivers" is
+    ticked; it installs into Program Files\Analog Devices\PlutoSDR-M2K
+    and is removed from Settings > Apps under its own name.
+    https://github.com/analogdevicesinc/plutosdr-m2k-drivers-win/releases/tag/v0.9
+    ADI's licence is BSD-style: binary redistribution is allowed with the
+    copyright notice and licence reproduced (licences/), without using
+    ADI's name to endorse this program, and with the condition that the
+    software is used with an Analog Devices part - which these drivers
+    are. ADI's package itself contains Microsoft's DPInst and WinUSB/WDF
+    co-installers and ADI's build of dfu-util 0.8 (GPL-2.0-or-later) with
+    libusb 1.0.19 (LGPL-2.1-or-later) linked in. Source on the source
+    site: dfu-util-0.8.tar.gz and libusb-1.0.19.tar.bz2.
+
+FFmpeg 9.0.2 - ffmpeg/ffmpeg.exe, ffprobe.exe
+    (GPL-3.0; licences/ffmpeg-LICENSE.txt)
+    Gyan Doshi's "essentials" static build (ffmpeg-9.0.2-essentials_build.7z,
+    from https://github.com/GyanD/codexffmpeg/releases/tag/9.0.2, the
+    GitHub mirror of https://www.gyan.dev/ffmpeg/builds/), the same build
+    OpenHamShack DATV carries. Built with --enable-gpl --enable-version3; its
+    configuration and the versions of the libraries linked into it
+    statically are in licences/ffmpeg-build-README.txt. OpenHamShack ATV runs
+    ffmpeg as a separate program for the webcam (DirectShow) and video-file
+    sources, and ffprobe to read a file's length and whether it has sound.
+    Corresponding source, on the source site: FFmpeg itself
+    (ffmpeg-9.0.2.tar.xz) and every GPL, LGPL and MPL library linked into
+    it. You may replace these two programs with your own build of FFmpeg.
+
+HackRF - hackrf/hackrf-0.dll (libhackrf 2026.01.3; licences/hackrf-COPYING)
+    Great Scott Gadgets' library for the HackRF One, used by OpenHamShack ATV
+    to transmit through one. The library's own source files
+    (host/libhackrf) carry the BSD-3-Clause licence, reproduced at the top
+    of host/libhackrf/src/hackrf.c; the HackRF repository as a whole is
+    GPL-2.0, whose text conda-forge ships with the package and is the
+    licences/ file. Taken unmodified from conda-forge's
+    libhackrf0-2026.01.3-hfd05255_0 package for win-64 (built from
+    https://github.com/greatscottgadgets/hackrf/releases/tag/v2026.01.3
+    with one patch, which only renames hackrf.dll to hackrf-0.dll).
+    Source on the source site: hackrf-2026.01.3.tar.xz.
+    https://greatscottgadgets.com/hackrf/  https://conda-forge.org/
+
+    The two libraries hackrf-0.dll imports, from conda-forge's packages
+    built for it, unmodified, in the same folder (each may be replaced
+    with your own build of the same library):
+
+    libusb 1.0.29 - hackrf/libusb-1.0.dll (LGPL-2.1-or-later;
+        licences/libusb-1.0.29-COPYING)
+        conda-forge libusb-1.0.29-h1839187_0, built from
+        https://github.com/libusb/libusb/releases/tag/v1.0.29
+        (libusb-1.0.29.tar.bz2 on the source site)
+    mingw-w64 winpthreads - hackrf/libwinpthread-1.dll (MIT-style;
+        licences/winpthreads-COPYING and licences/mingw-w64-COPYING.txt)
+        conda-forge libwinpthread-12.0.0.r4.gg4f2fc60ca-h57928b3_10,
+        built from https://github.com/mingw-w64/mingw-w64
+
+    (libiio's libusb-1.0.dll, above, is an older libusb of the same name:
+    Windows gives a program one library per name, so whichever of the two
+    is loaded first serves both. Every libusb call libhackrf makes exists
+    in both.)

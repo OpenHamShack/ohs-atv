@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "app": "atv",
+  "actions": [
+    {"id": "ptt", "kind": "press", "hold": true, "tx": true, "single": true, "label": "pad.ptt", "group": "transmit"},
+    {"id": "halt", "kind": "press", "label": "pad.halt", "group": "transmit", "short": ["HALT", "TX"]},
+    {"id": "tune", "kind": "turn", "label": "pad.tune", "group": "receive", "short": ["TUNE", "MHz"], "icon": "tune"},
+    {"id": "step", "kind": "press", "label": "pad.step", "group": "receive", "short": ["STEP", ""]},
+    {"id": "channel", "kind": "turn", "label": "pad.channel", "group": "receive", "short": ["CHAN", ""]},
+    {"id": "band", "kind": "turn", "label": "pad.band", "group": "receive", "short": ["BAND", ""]},
+    {"id": "band:next", "kind": "press", "label": "pad.band_next", "group": "receive", "short": ["BAND", ""]},
+    {"id": "mode:next", "kind": "press", "label": "pad.mode_next", "group": "receive", "short": ["MODE", ""]},
+    {"id": "source", "kind": "press", "label": "pad.source", "group": "transmit", "short": ["SOURCE", ""]},
+    {"id": "view", "kind": "press", "label": "pad.view", "group": "screens", "short": ["VIEW", ""]},
+    {"id": "scope-line", "kind": "turn", "label": "pad.scope_line", "group": "screens", "short": ["LINE", ""]},
+    {"id": "mute", "kind": "press", "label": "pad.mute", "group": "audio"},
+    {"id": "volume", "kind": "turn", "label": "pad.volume", "group": "audio", "short": ["VOL", ""]},
+    {"id": "record", "kind": "press", "label": "pad.record", "group": "receive"}
+  ]
+}

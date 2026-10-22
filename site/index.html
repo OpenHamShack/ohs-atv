@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenHamShack ATV — analogue amateur TV for Pluto SDR</title>
+<meta name="description" content="OpenHamShack ATV: analogue amateur television (AM-VSB and FM-ATV) on 70cm, 23cm and 6cm, from a Linux laptop and a Pluto-family SDR. Download and guide.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<!-- Search and link previews (SEO audit, 6 October 2026). The canonical URL
+     and og:url are absolute because that is what they are for; the build
+     fills them from --url, and fills og:image with the first screenshot as
+     the build actually wrote it (a .jpg when Pillow re-encoded it). -->
+<link rel="canonical" href="{{SITE_URL}}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenHamShack ATV — analogue amateur TV for Pluto SDR">
+<meta property="og:description" content="Analogue amateur television (AM-VSB and FM-ATV) on 70cm, 23cm and 6cm, from a Linux laptop and a Pluto-family SDR.">
+<meta property="og:url" content="{{SITE_URL}}">
+{{OG_IMAGE}}
+<meta name="twitter:card" content="summary_large_image">
+{{JSONLD}}
+<style>
+/* One self-contained page: no fonts or scripts from elsewhere, as the app
+   itself fetches nothing. Copied from the OpenHamShack NB page so the siblings
+   read as one family - same tokens, same cards, dark "instrument" look at
+   rest and light as the override. The only additions are what this page
+   has and NB's has not: a table (the radios and what each can carry) and a
+   plain warning card for the 70cm bandplan. */
+:root {
+  --bg: #0a0d12; --card: #10141b; --ink: #e8edf4; --dim: #a3adbb; --line: #232a36;
+  --accent: #4fd1e8; --accent-ink: #041016; --ok: #3ddc84; --warn: #ffb547; --code: #171c25;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #eef1f5; --card: #ffffff; --ink: #0f1722; --dim: #4a5566; --line: #dde2e9;
+    --accent: #0a8fb0; --accent-ink: #ffffff; --ok: #12a35a; --warn: #d98a00; --code: #f3f5f8;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body { font: 17px/1.55 "DejaVu Sans", "Segoe UI", system-ui, -apple-system, sans-serif; }
+a { color: var(--accent); }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+header { padding: 40px 0 8px; }
+header h1 { margin: 0; font-size: 40px; letter-spacing: .5px; }
+header p.lede { margin: 8px 0 0; font-size: 20px; color: var(--dim); max-width: 760px; }
+header p.sibling { margin: 14px 0 0; font-size: 14px; color: var(--dim); }
+section { margin: 28px 0; }
+h2 { font-size: 24px; margin: 0 0 12px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.dl { display: flex; flex-direction: column; gap: 10px; }
+.btn { display: inline-block; background: var(--accent); color: var(--accent-ink); text-decoration: none;
+  font-weight: 700; padding: 12px 18px; border-radius: 10px; }
+.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+.meta { color: var(--dim); font-size: 14px; word-break: break-all; }
+.note { color: var(--dim); font-size: 14px; margin: 0; }
+.dl h3 { margin: 10px 0 0; }
+code, .mono { font-family: "DejaVu Sans Mono", ui-monospace, monospace; font-size: 14px;
+  background: var(--code); padding: 1px 5px; border-radius: 5px; }
+pre.mono { background: var(--code); padding: 10px 12px; border-radius: 8px; margin: 0;
+  white-space: pre-wrap; word-break: break-all; }
+figure { margin: 0; }
+figure a { display: block; }
+figure img { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); display: block; }
+figcaption { color: var(--dim); font-size: 14px; margin-top: 6px; }
+figcaption a { color: var(--dim); text-decoration: underline; }
+ul.features { margin: 0; padding-left: 20px; }
+ul.features li { margin: 4px 0; }
+ol.steps li { margin: 6px 0; }
+.release h3 { margin: 18px 0 4px; font-size: 18px; }
+.release ul { margin: 0; padding-left: 20px; }
+.release li { margin: 2px 0; }
+.extras { margin: 8px 0 0; padding-left: 20px; }
+.extras li { margin: 3px 0; }
+footer { color: var(--dim); font-size: 14px; padding: 24px 0 48px; border-top: 1px solid var(--line); margin-top: 40px; }
+footer a { color: var(--dim); }
+footer p { margin: 4px 0; }
+.badge { display: inline-block; background: var(--ok); color: #06120b; border-radius: 999px; padding: 2px 10px;
+  font-size: 14px; font-weight: 700; vertical-align: middle; margin-left: 8px; }
+.status { border-color: var(--warn); }
+.status h2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.status .pill { display: inline-block; background: var(--warn); color: #241a00; border-radius: 999px;
+  padding: 2px 10px; font-size: 13px; font-weight: 700; }
+.status ul { margin: 10px 0 0; padding-left: 20px; }
+.status li { margin: 4px 0; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--dim); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .4px; }
+td.yes { color: var(--ok); font-weight: 700; }
+td.part { color: var(--warn); font-weight: 700; }
+h3.sub { font-size: 18px; margin: 18px 0 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>OpenHamShack ATV <span class="badge">{{VERSION}}</span></h1>
+  <p class="lede">An analogue amateur-television transceiver for a Linux laptop: 625-line PAL with sound,
+  generated, transmitted, received and decoded in one program, with a Pluto-family SDR.</p>
+  <p class="sibling">A sibling of <a href="https://openhamshack.brian-henderson.co.uk/">OpenHamShack QO-100 WB</a> (DATV, in a box) and
+  <a href="https://openhamshacknb.brian-henderson.co.uk/">OpenHamShack QO-100 NB</a> (QO-100 narrowband) and
+  <a href="https://openhamshackham.brian-henderson.co.uk/">OpenHamShack Radio</a> (all bands) — this one sends pictures
+  the old way. By GM4BRI. Back to <a href="https://brian-henderson.co.uk/">brian-henderson.co.uk</a>.</p>
+</header>
+
+<section class="card status">
+  <h2>Status <span class="pill">Early preview</span> <span class="pill">On air at the bench</span></h2>
+  <p>The whole chain is verified against the program's own <b>simulated radio</b>: the PAL waveform is measured
+  against the broadcast standard and pictures go through encoder, modulator, a noisy channel, demodulator and
+  decoder in the automatic tests. It has now been <b>on the air at the bench</b>, by GM4BRI: a <b>Pluto nano</b> on
+  USB and a <b>LibreSDR</b> on Ethernet, each transmitting to the other on 23cm with the antennas a short distance
+  apart. Pictures have come off the air in <b>FM-ATV colour with sound</b> (LibreSDR to nano at 12.5 MS/s: SNR about
+  24 dB, sound 47 dB SINAD), in <b>AM-VSB colour</b> at 10 MS/s, and in both <b>narrow formats</b> from the nano's
+  5 MS/s (Mini-MAC: SNR about 30 dB, colour, digital sound at 39 dB SINAD). That is two radios on one bench, not a
+  contact over a real path. A stock ADALM-Pluto, the Pluto+ and the HackRF are untried.</p>
+  <ul>
+    <li>Transmitting needs an amateur licence, and you are responsible for what you transmit: the band, the power,
+    the bandwidth and your ident. The program's guard helps; it does not hold your licence.</li>
+    <li>A real radio does not transmit until you tick <b>Let a real radio transmit</b> in Settings › Transmit. The
+    simulator transmits nothing at all.</li>
+    <li>An SDR's output is not filtered: a band-pass or low-pass filter after it (and after any amplifier) is
+    needed before an antenna.</li>
+  </ul>
+</section>
+
+<section class="grid">
+  <div class="card dl" id="download">
+    <h2>Download</h2>
+    {{DOWNLOAD}}
+  </div>
+  <div class="card dl">
+    <h2>User guide</h2>
+    <span class="note">Installing, first run, choosing a radio, the main window, receiving, transmitting and its
+    safety interlocks, each band with its UK bandplan notes, the narrow formats and how they did on the air, IQ
+    recording, and troubleshooting.</span>
+    {{GUIDE}}
+  </div>
+</section>
+
+{{SHOTS}}
+
+<section class="card">
+  <h2>What it does</h2>
+  <ul class="features">
+    <li><b>Two systems.</b> <b>AM-VSB</b>, UK System I-style: negative-modulation PAL with a vestigial lower
+    sideband, 5.5 MHz video, FM sound carrier at +6.0 MHz. <b>FM-ATV</b> to IARU Region 1 V.2: 3.5 MHz peak
+    deviation, CCIR 405 pre-emphasis, FM sound subcarrier at 6.0 MHz (5.5 and 6.5 MHz selectable).</li>
+    <li><b>Three bands.</b> 23cm and 6cm (5.8 GHz) for FM-ATV; 23cm also for AM-VSB; 70cm for AM-VSB, with a
+    warning that analogue ATV is no longer in the bandplan there (below).</li>
+    <li><b>Its own picture generator</b>: a test card with your callsign and locator in it, colour bars, a webcam,
+    or a video file (anything <code>ffmpeg</code> plays, with its sound; <b>File…</b> opens where you last chose one,
+    and names it). Sound: a 1 kHz tone, the microphone, the file's sound, or none. Your callsign is in vision on
+    every source for the whole transmission and cannot be turned off.</li>
+    <li><b>Its own decoder</b>: sync recovery, PAL colour and sound, with a <b>waveform monitor</b> (any line of
+    either field) and a <b>vectorscope</b>; lock, SNR and line-jitter readings; a picture snapshot to PNG.</li>
+    <li><b>What fits</b>: for the radio's sample rate, the card says what the signal occupies, how much video
+    bandwidth, whether colour and sound fit — and what was given up when they do not. Transmit is refused when the
+    signal does not fit.</li>
+    <li><b>Spectrum and waterfall</b> of the receive band, with the bandplan strip, the channels to click, and
+    the occupied bandwidth drawn over the signal; while transmitting on one radio, the signal being sent.</li>
+    <li><b>Colour and sound from a USB Pluto</b>, to another OpenHamShack ATV: <b>Mini-MAC</b> (time-multiplexed
+    colour with digital sound, after the MAC system of 1980s satellite TV) and <b>narrow colour PAL</b> (colour on
+    a 1.6 MHz subcarrier, sound on 2.2 MHz) both fit the 5 MS/s a Pluto can transmit over USB. Neither is a
+    standard, and the window says so wherever one is chosen; the receiver recognises them by itself. Both have
+    been sent and received on the air.</li>
+    <li><b>The radio's own filters, undone.</b> Every AD936x has fixed half-band filters that cut the top of the
+    channel — at 12.5 MS/s, 7.8 dB off a 5.5 MHz sound subcarrier, transmitter and receiver together. OpenHamShack ATV
+    models them from Analog Devices' own coefficients, and each radio undoes its own share inside filters the
+    program already runs, at no processing cost. On the air the colour burst came up from 0.73 to 0.90 of what was
+    sent. A filter left loaded by another program (a DATV application's) is bypassed while OpenHamShack ATV has the
+    radio and put back afterwards.</li>
+    <li><b>It checks the radio does what it was told</b> (from the release after 0.1.7): the Pluto driver reads
+    back the rate, bandwidths, gains and LOs it sets, and watches the rate and LOs once a second while running. A
+    value that moves is set back and the window says so in red; while transmitting, a transmit LO that moves unkeys
+    at once. Found because a nano twice changed its own rate and LO under the program.</li>
+    <li><b>IQ recording and playback</b>: Record IQ saves the radio's raw samples as SigMF, and a recording plays
+    back through the same receiver, never transmitting.</li>
+    <li><b>A simulated radio</b> is the default: stations on the bandplan channels and your own transmission
+    looped back, so every mode can be tried with no hardware and nothing transmitted.</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>Radios, and what they can honestly carry</h2>
+  <p class="note">Analogue TV is wide. The limit is rarely the radio chip; it is how fast samples get between the
+  radio and the computer. Colour AM-VSB with sound needs 10 MS/s; standard FM-ATV needs 20 MS/s.</p>
+  <div class="tablewrap">
+  <table>
+    <tr><th>Radio</th><th>Link</th><th>Sustains</th><th>What that carries</th></tr>
+    <tr><td><b>ADALM-Pluto</b>, Pluto nano</td><td>USB 2</td><td>6.25 MS/s received in full over libusb, about
+      15 with Tezuka's 8-bit receive; transmits about 5.2 (measured on a nano)</td><td class="part">Sends at 5 MS/s:
+      AM-VSB as a 2.4 MHz mono picture without sound, FM-ATV at reduced deviation (mono, no sound) — or colour and
+      sound to another OpenHamShack ATV with Mini-MAC or narrow colour PAL. Not standard FM-ATV. With 8-bit receive it
+      <i>receives</i> colour and sound.</td></tr>
+    <tr><td><b>LibreSDR</b></td><td>Gigabit Ethernet</td><td>16.2 MS/s measured (its README says 20)</td>
+      <td class="yes">FM-ATV at 16 MS/s, 4 MHz p-p, with colour and sound; colour AM-VSB with sound</td></tr>
+    <tr><td><b>Pluto+</b></td><td>Gigabit Ethernet</td><td>about 28 MS/s ceiling (reported)</td>
+      <td class="yes">Standard FM-ATV at 20 MS/s; colour AM-VSB with sound</td></tr>
+    <tr><td><b>HackRF One</b> — transmit only, beside the receiving radio</td><td>USB 2, 8-bit samples</td>
+      <td>20 MS/s</td><td class="yes">Standard FM-ATV and colour AM-VSB from a USB device. Receive stays on the
+      Pluto, LibreSDR or simulator, and carries on while you transmit.</td></tr>
+  </table>
+  </div>
+  <ul class="features" style="margin-top:12px">
+    <li><b>Half duplex</b> on a single radio over USB: receive pauses while you transmit, the picture shows what
+    you are sending, and the spectrum shows the signal going out, in red, labelled TX. With a HackRF transmitting,
+    the receiver keeps running.</li>
+    <li><b>6cm</b>: a stock Pluto (AD9363) tunes 325–3800 MHz. It needs the AD9364 setting, or an AD9361 board such
+    as the LibreSDR, to reach 5.8 GHz; performance there is not guaranteed by Analog Devices, and output is about
+    −3 dBm. The HackRF tunes 1 MHz–6 GHz but its output is also low at 5.8 GHz. <b>An external PA and LNA are
+    needed in practice.</b></li>
+    <li>At 23cm a Pluto gives about +2.5 dBm: a PA for any real distance, and an LNA and band-pass filter are
+    recommended.</li>
+    <li>Each radio is <b>steered to its best mode</b> the first time it is used — 5 MS/s and reduced FM deviation
+    for a USB Pluto (or, with 8-bit receive, colour reception at 10 and 12.5 MS/s), 16 MS/s for a LibreSDR, full
+    width for a faster Ethernet radio or a HackRF — and the window says what it chose. Your own changes afterwards
+    are kept.</li>
+    <li><b>Find</b> in Settings › Radio lists the Pluto-family radios on USB and the network; choosing one makes it
+    the radio, which comes up receiving, never transmitting.</li>
+    <li>The window says all of this where it applies: a band the radio cannot tune is greyed with the reason, and a
+    sample rate above what the link sustains is marked.</li>
+  </ul>
+</section>
+
+<section class="card status">
+  <h2>70cm: outside the bandplan</h2>
+  <p>Analogue ATV was <b>removed from the RSGB 70cm bandplan on 4 December 2020</b>, and IARU Region 1 has not
+  permitted it in 430–440 MHz since 1 January 2021; only narrow DATV around 437 MHz remains. The UK licence itself
+  does not forbid it, so OpenHamShack ATV allows AM-VSB on 70cm with a prominent warning, keeps the whole signal inside
+  the 430–440 MHz allocation (433 MHz is offered as the channel where an AM-VSB signal with sound fits), and records
+  each 70cm transmission with that warning in its transmit log. Receiving
+  on 70cm is unaffected. <b>Whether to transmit there is your decision, under your licence.</b> 23cm is the place
+  for AM-VSB transmit inside the bandplan.</p>
+</section>
+
+<section class="card">
+  <h2>Installing</h2>
+  <p class="note">One <code>.deb</code> for every architecture: the program is pure Python. It needs Python 3.11
+  or newer.</p>
+  <h3 class="sub">Debian 13 (trixie)</h3>
+  <ol class="steps">
+    <li>Download the <code>.deb</code> above and check it against the SHA-256 shown: <span class="mono">sha256sum
+    openhamshack-atv_*_all.deb</span>.</li>
+    <li>Install it with <code>sudo apt install ./openhamshack-atv_&lt;version&gt;_all.deb</code> — using
+    <code>apt install ./…</code> rather than <code>dpkg -i</code> lets apt pull in the required packages
+    (<code>python3-numpy</code>, <code>python3-pyqt6</code>, <code>python3-pyaudio</code>) in the same step, and the
+    <b>Recommends</b> by default: <code>python3-libiio</code> for the Pluto family, <code>avahi-daemon</code> for
+    finding one on the network, <code>ffmpeg</code> for the webcam and video-file sources, and
+    <code>libhackrf0</code> for a HackRF.</li>
+    <li>Run <b>OpenHamShack ATV</b> from your applications menu, or <code>openhamshack-atv</code> from a terminal. It starts
+    on the simulator until you choose a real radio in Settings, so there is always something to see and nothing
+    transmits by accident.</li>
+  </ol>
+  <h3 class="sub">Ubuntu 24.04 or newer</h3>
+  <p class="note">The same command. PyQt6 and PyAudio are in Ubuntu's <b>universe</b> component; if apt cannot
+  find them, run <code>sudo add-apt-repository universe</code> first. Ubuntu 22.04's Python 3.10 is too old.</p>
+  <h3 class="sub">Raspberry Pi OS (Bookworm, 64-bit)</h3>
+  <p class="note">The same command; every dependency is in the Raspberry Pi OS repositories. Not yet tried on a Pi,
+  and its speed has not been measured: expect a Pi to manage the lower sample rates and to struggle with FM-ATV at
+  20 MS/s. The status bar shows skipped frames when the computer cannot keep up.</p>
+  <p class="meta" style="margin-top:12px">Built and tested on Debian 13. Debian 12, Ubuntu 24.04 and Raspberry Pi
+  OS meet the package's dependencies but have not been tried. A missing optional package disables just that one
+  feature, with a sentence saying which package to install — it never stops the program.</p>
+</section>
+
+<section class="card release">
+  <h2>Release notes</h2>
+  {{NOTES}}
+</section>
+
+<footer>
+  <p>Bandplan facts are from the RSGB 2026 band plan, the IARU Region 1 VHF Handbook 10.03, the Ofcom amateur
+  licence and the BATC wiki. PAL timing is ITU-R BT.470 and BT.1700. OpenHamShack ATV is not affiliated with the RSGB,
+  BATC, Analog Devices or Great Scott Gadgets. GM4BRI.</p>
+  <p>Transmitting needs an amateur radio licence; you are responsible for staying within yours. Licence:
+  GPL-3.0-or-later. {{SOURCE}} Built {{BUILT}}.</p>
+</footer>
+</div>
+</body>
+</html>

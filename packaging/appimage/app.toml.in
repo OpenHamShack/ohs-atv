@@ -1,0 +1,28 @@
+# The kit's descriptor for ATV's AppImage (ohs-libs packaging/README.md),
+# filled in by tools/build-appimage.sh, which stages src/ beside it.
+[app]
+id = "com.openhamshack.atv"
+kind = "atv"
+name = "OpenHamShack ATV"
+summary = "Analogue amateur-television transceiver with Teletext"
+executable = "shack-atv"
+version = "@VERSION@"
+entry = "ohsatv.__main__:main"
+icon = "atv"
+categories = ["HamRadio", "AudioVideo"]
+keywords = ["ATV", "PAL", "Teletext", "Pluto"]
+license_file = "LICENSE"
+
+[python]
+paths = ["src"]
+requirements = [@REQUIREMENTS@]
+
+[linux]
+host_libs = "host-libs.txt"
+
+[windows]
+# The Inno AppId of packaging/windows/openhamshack-atv.iss, which must never change.
+app_guid = "{B92D9921-A099-4C9E-8A69-C2CDF6D681DB}"
+
+[pyinstaller]
+spec = "qt-app.spec"

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Favicon: a simplified version of packaging/openhamshack-atv.svg (the app and
+  package icon) for 16 px rendering, as OpenHamShack NB's favicon simplifies its
+  icon. The full icon's gradients, glass sheen and caption bar disappear at
+  that size, so this keeps only what still reads small: the dark tile, a
+  three-element Yagi and a screen of colour bars. Drawn by hand, no
+  external assets (house rule).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect x="2" y="2" width="60" height="60" rx="13" fill="#0a0d12"/>
+  <g stroke="#4fd1e8" stroke-width="3.2" stroke-linecap="round">
+    <line x1="14" y1="12" x2="50" y2="12"/>
+    <line x1="20" y1="6" x2="20" y2="18"/>
+    <line x1="32" y1="7" x2="32" y2="17"/>
+    <line x1="44" y1="8" x2="44" y2="16"/>
+  </g>
+  <rect x="8" y="22" width="48" height="34" rx="5" fill="#2a3242"/>
+  <rect x="12" y="26" width="6" height="26" fill="#c0c0c0"/>
+  <rect x="18" y="26" width="6" height="26" fill="#c0c000"/>
+  <rect x="24" y="26" width="6" height="26" fill="#00c0c0"/>
+  <rect x="30" y="26" width="5" height="26" fill="#00c000"/>
+  <rect x="35" y="26" width="6" height="26" fill="#c000c0"/>
+  <rect x="41" y="26" width="6" height="26" fill="#c00000"/>
+  <rect x="47" y="26" width="5" height="26" fill="#0000c0"/>
+</svg>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>openhamshack-atv.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>OpenHamShack ATV</name>
+  <summary>Analogue amateur-television transceiver</summary>
+  <description>
+    <p>
+      OpenHamShack ATV generates, transmits, receives and decodes 625-line PAL
+      amateur television with sound: AM-VSB (System I style) and FM-ATV
+      (IARU R1 V.2, CCIR 405 pre-emphasis, 6 MHz sound subcarrier) on the
+      23cm and 6cm bands, and analogue receive on 70cm.
+    </p>
+    <p>
+      It drives the ADALM-Pluto family (Pluto, Pluto+, Pluto nano, LibreSDR)
+      through libiio, generates its own picture - a test card with the
+      station's ident, colour bars, a webcam or a video file - and decodes
+      received pictures in the program with a waveform monitor and a
+      vectorscope. A simulated radio lets it run, and be tested, with no
+      hardware and without transmitting anything.
+    </p>
+  </description>
+  <launchable type="desktop-id">openhamshack-atv.desktop</launchable>
+  <categories>
+    <category>HamRadio</category>
+    <category>Network</category>
+  </categories>
+  <provides>
+    <binary>openhamshack-atv</binary>
+  </provides>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <!-- @VERSION@ is substituted by tools/build-deb.sh from ohsatv/VERSION. -->
+    <release version="@VERSION@" date="2026-10-04"/>
+  </releases>
+</component>

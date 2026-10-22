@@ -1,0 +1,32 @@
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN"
+ "http://www.freedesktop.org/standards/menu-spec/menu-1.0.dtd">
+<!-- An "Amateur Radio" submenu for every application that says HamRadio.
+
+     KDE, XFCE, MATE and Raspberry Pi OS have no amateur-radio section of
+     their own: HamRadio is only an "additional" category in the menu spec,
+     so a ham app is filed by whatever main category sits beside it - ours
+     said Network and landed under Internet (Brian, 08/10/2026: wanted its
+     own submenu). OpenHamShack NB and OpenHamShack HAM ship the same submenu under
+     their own file names; same-named menus merge, so any one of the three
+     is enough and removing one leaves the others'.
+
+     Every HamRadio app is included, WSJT-X and fldigi too, but only our
+     own are taken out of Internet - moving somebody else's app away from
+     where its packager put it is not ours to do. GNOME ignores merged
+     menus and finds apps by search, which is harmless. -->
+<Menu>
+  <Name>Applications</Name>
+  <Menu>
+    <Name>HamRadio</Name>
+    <Directory>openhamshack-atv-hamradio.directory</Directory>
+    <Include>
+      <Category>HamRadio</Category>
+    </Include>
+  </Menu>
+  <Menu>
+    <Name>Internet</Name>
+    <Exclude>
+      <Filename>openhamshack-atv.desktop</Filename>
+    </Exclude>
+  </Menu>
+</Menu>

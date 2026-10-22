@@ -1,0 +1,37 @@
+# shack-i18n-check settings (docs/I18N.md; OpenHamShack I18N.md section 3).
+# Run it as the suite does: python3 tools/i18n.py check
+
+# What a person never reads in this app as a string: the tests' own
+# fixtures, the developer tools, the docs (docs/guide is the user guide,
+# translated later as whole documents, not string by string), the Debian and
+# Windows packaging, and site/ (the website, a separate product with its own
+# translation when it gets one).
+exclude = ["tests/**", "tools/**", "docs/**", "packaging/**", "site/**"]
+
+[python]
+# The window's own widgets and helpers, beside Qt's built-in sinks: each was
+# read and puts its text argument on screen (a title, caption, label,
+# tooltip, toast or painted text). Not here:
+# - The engine's data tables (state.py's `_k` setting descriptions, bands.py's
+#   Segment/Channel/Band notes and refusals) and its exceptions (DeviceError,
+#   ValueError sentences from radio.set): M3 moves those into a gettext
+#   domain in the engine, and their constructors take data as well as text.
+# - SettingsDialog._add / Field: the first argument is a setting key
+#   ("identText"), which the check would read as text; the labels and help
+#   they show come from settings.py's LABELS / CHOICE_LABELS tables and the
+#   engine's help, which M3 converts as tables.
+# - StatTile.set and Segmented.set_options: generic names whose arguments
+#   are values computed from the radio's state, not literals.
+# The second group is the Teletext editor's (ohstxt/ui), brought with it from
+# OpenHamShack Teletext. Sinks are one list for the whole repo, so each
+# package's names are checked in the other's files too; that only ever finds
+# more, never less.
+sinks = [
+    "Card", "Caption", "Slider", "Segmented", "Toggle", "Button", "IconButton", "Check", "check_row",
+    "WrapLabel", "StatTile",
+    "set_text", "set_title", "set_full", "say", "_say", "show_toast",
+    "_scroll", "_section", "_row", "_flag", "_paint_no_signal",
+    "drawText", "getOpenFileName", "getSaveFileName", "getExistingDirectory",
+    "LineEditor", "act", "_message", "set_message", "set_sub", "set_warning",
+    "setSpecialValueText", "setHorizontalHeaderLabels",
+]

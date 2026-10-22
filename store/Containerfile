@@ -1,0 +1,69 @@
+# OpenHamShack ATV, the store form: `python3 -m ohsatv --server`.
+#
+# Built by tools/build-store.sh from a staged copy of one commit (this
+# folder's files at the top, with ohsatv/ and tools/vendor/ beside them),
+# never from a working tree, and carried in the signed package so a
+# controller with no route out can install it (D12).
+#
+# Debian 13, as the .deb is tested on: Debian's numpy; libiio 0.26 and
+# libad9361 for the Pluto; libhackrf for the HackRF; paramiko for the radio
+# lock's marker on the Pluto itself (it guards against a desktop app on
+# another computer opening the same radio); Pillow for the pictures' JPEG.
+# No PyQt, no PortAudio, no sound card: sound goes over the API
+# (ohsatv/server/audio.py). No ffmpeg either: the webcam and video-file
+# sources stay desktop-only (docs/SERVER-API.md, "What it is not").
+FROM docker.io/library/debian:13-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3 \
+        python3-numpy \
+        python3-libiio \
+        libad9361-0 \
+        libhackrf0 \
+        python3-paramiko \
+        python3-pil \
+        ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# The shared OpenHamShack libraries, exactly the pinned wheels: each one's
+# hash is checked against tools/vendor/requirements.lock before it is
+# unpacked into site-packages, and the build fails on any mismatch (no pip in
+# the image; a wheel is a zip with nothing to run at install). shack-i18n is
+# the string check's, a development tool, and stays out.
+COPY tools/vendor/ /tmp/vendor/
+RUN cd /tmp/vendor \
+    && site="$(python3 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')" \
+    && mkdir -p "$site" \
+    && for w in shack_bandplan shack_client shack_pad; do \
+         f="$(ls ${w}-*.whl)"; \
+         want="$(sed -n "s/^$(echo $w | tr _ -)==.*--hash=sha256:\([0-9a-f]*\).*/\1/p" requirements.lock)"; \
+         [ -n "$want" ] || { echo "$w is not pinned in requirements.lock"; exit 1; }; \
+         echo "$want  $f" | sha256sum -c - || exit 1; \
+         python3 -m zipfile -e "$f" "$site"; \
+       done \
+    && python3 -c "import shack_bandplan, shack_client, shack_pad; shack_bandplan.load()" \
+    && rm -rf /tmp/vendor
+
+RUN useradd --uid 1000 --create-home --home-dir /data --shell /usr/sbin/nologin shack
+
+COPY ohsatv/ /opt/shack-atv/ohsatv/
+COPY LICENSE /opt/shack-atv/
+
+# Everything the engine keeps is on the data volume (module.yaml), so the
+# read-only image is never written to. The radio lock's folder is the
+# container's own tmpfs: between apps on the controller the broker decides
+# (ohsatv/server/run.py says why), and the ssh marker on the Pluto stays.
+ENV OHSATV_CONF=/data/config.json \
+    OHSATV_DATA=/data \
+    OHSATV_UI_CONF=/data/ui.json \
+    OHSRADIO_LOCK_DIR=/tmp/radio-locks \
+    HOME=/data \
+    XDG_CACHE_HOME=/tmp/cache \
+    SHACK_PORT=8080 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+USER shack
+WORKDIR /opt/shack-atv
+EXPOSE 8080
+ENTRYPOINT ["python3", "-m", "ohsatv", "--server"]

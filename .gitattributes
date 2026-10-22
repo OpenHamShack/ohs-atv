@@ -1,0 +1,20 @@
+# What a published source tarball leaves out (~/openhamshack-nb/tools/
+# source-site.py tarball, run for every release from 0.2.2, the first with
+# a Windows installer). The repository is private; each release's tarball
+# is public on https://source.brian-henderson.co.uk/#openhamshack-atv. Only
+# notes that are internal and never needed to build anything go here: the
+# GPL's corresponding source is everything needed to rebuild what is
+# shipped, so a file the build, the tests or the packaging reads must never
+# be listed.
+#
+# HANDOVER.md: the working notes passed between sessions - build and test
+# hosts' addresses and accounts, the web host's folders, the radios on the
+# home network. Nothing reads it; DESIGN.md and docs/ say everything about
+# the program that it does.
+HANDOVER.md export-ignore
+
+# docs/screenshots: about 32 MB, more than the rest of the tree. Not source:
+# ohsatv.ui.screenshots renders them from the simulator, and only
+# tools/site-build.py reads them, for the site and the guide's web copy -
+# neither the .deb nor the installer carries one.
+docs/screenshots export-ignore
